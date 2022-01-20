@@ -10,21 +10,23 @@
           <div class="wrapper_form">
             <div class="email">
               <p style="margin-bottom: 5px">E-MAIL</p>
-              <input v-model="email" placeholder="">
+              <input @click="emailError=''" type="email" v-model="userData.email" placeholder="">
+              <p style="color: red; font-size: 10px">{{ emailError }}</p>
             </div>
             <div class="password">
               <p>MOT DE PASSE</p>
-              <input v-model="password" placeholder="">
-              <button type="button" class="forget_button"><div style="font-size: 100%; color: #01aef4">Tu as oublié ton mot de passe ?</div></button>
+              <input @click="passwordError=''" type="password" v-model="userData.password" placeholder="">
+              <p style="color: red; font-size: 10px">{{ passwordError }}</p>
+              <button @click="message('Tant pis pour toi !')" type="button" class="forget_button"><div style="font-size: 100%; color: #01aef4">Tu as oublié ton mot de passe ?</div></button>
             </div>
-            <button type="submit" style="background-color: #5765f2; font-size: 16px; line-height: 24px;margin-bottom: 8px;font-weight: 500;cursor: pointer;width: 100%;height: 44px;">
+            <button @click="validateCred()" type="submit" style="background-color: #5765f2; font-size: 16px; line-height: 24px;margin-bottom: 8px;font-weight: 500;cursor: pointer;width: 100%;height: 44px;">
               <div style="color: #fff">
                 Se connecter
               </div>
             </button>
             <div style="text-align: left;">
               <span style="font-size: 14px;line-height: 16px;color: #5765f2; margin-right: 5px">Besoin d'un compte ?</span>
-              <button type="button">
+              <button @click="message('Inscription de la noche')" type="button">
                 <div style="color: #01aef4">
                   S'inscrire
                 </div>
@@ -34,12 +36,19 @@
         </div>
         <div class="separator"></div>
         <div class="right_box">
-          <img src="@/assets/qrcode_discord.png" style="" alt="">
+          <img src="@/assets/qrcode_discord.png" style="margin-bottom: 20px" alt="">
           <h3 style="color: #ffffff; font-weight: 600; font-size: 20px">Se connecter avec un code QR</h3>
           <div style="font-weight: 600; font-size: 12px; color: #b9bbbe">
             Scanne-le avec l'<strong>application mobile Discord</strong> pour te connecter instantanément.
           </div>
         </div>
+      </div>
+    </div>
+    <div class="card" v-if="isSubmitted">
+      <div class="card-body">
+        <h4 class="card-title">Form Data</h4>
+        <p>Mail: <b>{{ userData.email }}</b></p>
+        <p>Password: <b>{{ userData.password }}</b></p>
       </div>
     </div>
   </div>
@@ -50,9 +59,40 @@
 //import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: 'Home',
-  components: {
-    //HelloWorld,
+  data() {
+    return {
+      userData: {
+        email: '',
+        password: '',
+      },
+      emailError: '',
+      passwordError: '',
+      isSubmitted: false
+    }
+  },
+
+  methods: {
+    submitted() {
+      this.isSubmitted = true;
+    },
+    validateCred() {
+      const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      if(this.userData.password == ''){
+        this.passwordError = "Password cannot be empty"
+        return
+      }
+      if(this.userData.email.match(mailformat))
+      {
+        this.submitted();
+      }
+      else
+      {
+        this.emailError = "Invalid email address!"
+      }
+    },
+    message(msg){
+      alert(msg)
+    }
   }
 }
 </script>
@@ -151,6 +191,7 @@ a, h2, p {
 <style>
 body{
   background-image: url("../assets/background_login.jpeg");
+
 }
 html, body {margin: 0; height: 100%; overflow: hidden}
 </style>
