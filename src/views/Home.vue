@@ -72,13 +72,6 @@ export default {
   },
 
   methods: {
-    submitted() {
-      this.isSubmitted = true;
-      mongoose.connect("mongodb://localhost:27017/vuenodedb").then(
-          () => {console.log('Database connection is successful') },
-          err => { console.log('Error when connecting to the database'+ err)}
-      );
-    },
     validateCred() {
       const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if(this.userData.password == ''){
