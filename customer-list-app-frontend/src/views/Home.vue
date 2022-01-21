@@ -1,10 +1,10 @@
 <template>
   <div class="container-fluid">
     <div class="text-center">
-      <h1>Nest Customer List App Tutorial</h1>
+      <h1>Nest user List App Tutorial</h1>
       <p>Built with Nest.js, Vue.js, and MongoDB</p>
-      <div v-if="customers.length === 0">
-        <h2>No customer found at the moment</h2>
+      <div v-if="users.length === 0">
+        <h2>No user found at the moment</h2>
       </div>
     </div>
 
@@ -12,28 +12,26 @@
       <table class="table table-bordered">
         <thead class="thead-dark">
           <tr>
-            <th scope="col">Firstname</th>
-            <th scope="col">Lastname</th>
+            <th scope="col">pseudo</th>
             <th scope="col">Email</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Address</th>
+            <th scope="col">hashPassword</th>
             <th scope="col">Description</th>
+            <th scope="col">created_date</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="customer in customers" :key="customer._id">
-            <td>{{ customer.first_name }}</td>
-            <td>{{ customer.last_name }}</td>
-            <td>{{ customer.email }}</td>
-            <td>{{ customer.phone }}</td>
-            <td>{{ customer.address }}</td>
-            <td>{{ customer.description }}</td>
+          <tr v-for="user in users" :key="user._id">
+            <td>{{ user.pseudo }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.hashPassword }}</td>
+            <td>{{ user.description }}</td>
+            <td>{{ user.created_date }}</td>
             <td>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group" style="margin-bottom: 20px;">
-                  <router-link :to="{name: 'Edit', params: {id: customer._id}}" class="btn btn-sm btn-outline-secondary">Edit Customer</router-link>
-                  <button class="btn btn-sm btn-outline-secondary" v-on:click="deleteCustomer(customer._id)">Delete Customer</button>
+                  <router-link :to="{name: 'Edit', params: {id: user._id}}" class="btn btn-sm btn-outline-secondary">Edit user</router-link>
+                  <button class="btn btn-sm btn-outline-secondary" v-on:click="deleteuser(user._id)">Delete user</button>
                 </div>
               </div>
             </td>
@@ -49,17 +47,17 @@ import axios from "axios";
 export default {
   data() {
     return {
-      customers: []
+      users: []
     };
   },
   created() {
-    this.fetchCustomers();
+    this.fetchUsers();
   },
   methods: {
-    fetchCustomers() {
+    fetchUsers() {
       axios
-        .get(`${server.baseURL}/customer/customers`)
-        .then(data => (this.customers = data.data));
+        .get(`${server.baseURL}/user/users`)
+        .then(data => (this.users = data.data));
     }
   }
 };
