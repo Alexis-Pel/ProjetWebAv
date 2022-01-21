@@ -208,7 +208,7 @@
 
                             <div class="sousBlock">
                                 <div class="checkbox">
-                                    <input @click="condtionError=''" v-model="userData.condition" class="checkboxInput" type="checkbox" id="condG" name="condG" value="1">
+                                    <input style="width: 24px; height: 24px;background-color: #72767d" @click="condtionError=''; changeButtonColor()" v-model="userData.condition" class="checkboxInput" type="checkbox" id="condG" name="condG">
                                     <label class="checkboxLabel" for="condG">J'ai lu et accepté les <a href="">Conditions d'utilisation</a>
                                         et la <a href="">Politique de Confidentialité</a> de Discord.</label>
                                 </div>
@@ -216,7 +216,7 @@
                             </div>
                            
                             <div class="sousBlock">
-                                <button @click="validateCred()" type="submit" class="button">
+                                <button disabled id="continueButton" @click="validateCred()" type="submit" class="button" style="border-radius: 5px;text-decoration: none; display: inline-block; border:none; opacity:0.6; cursor:not-allowed">
                                     <div class="buttonContinuer">Continuer</div>
                                 </button>
                             </div>
@@ -254,20 +254,33 @@ export default {
                 jour: '',
                 mois: '',
                 annee: '',
-                condition: true,
+                condition: false,
             },
             emailError: '',
             passwordError: '',
             condtionError: '',
             pseudoError: '',
             dateError: '',
-            isSubmitted: false
+            isSubmitted: false,
+            continueBackgroundColor: '',
         }
     },
 
   methods: {
     submitted() {
       this.isSubmitted = true;
+    },
+    changeButtonColor(){
+        if(this.userData.condition != true){
+            document.getElementById('continueButton').style.opacity = "1"
+            document.getElementById("continueButton").disabled = false;
+            document.getElementById("continueButton").style.cursor = "default";
+        }
+        else{
+            document.getElementById('continueButton').style.opacity = "0.6"
+            document.getElementById("continueButton").disabled = true;
+            document.getElementById("continueButton").style.cursor = "not-allowed";
+        }
     },
     validateCred() {
         const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
