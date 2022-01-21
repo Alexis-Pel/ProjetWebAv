@@ -136,6 +136,7 @@ import { decrypt, encrypt } from "../assets/js/encryption";
 import { server } from "../helper";
 import axios from "axios";
 import { setCookie } from "../assets/js/cookies";
+//import {checkLogged} from '../assets/js/login'
 
 export default {
   data() {
