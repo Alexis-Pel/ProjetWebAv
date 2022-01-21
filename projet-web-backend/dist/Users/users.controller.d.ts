@@ -5,7 +5,8 @@ export declare class UsersController {
     constructor(customerService: UsersService);
     addUser(res: any, createCustomerDTO: CreateUsersDTO): Promise<any>;
     getAllUsers(res: any): Promise<any>;
-    getUser(res: any, customerID: any): Promise<any>;
+    getUserByMail(res: any, email: any): Promise<any>;
+    getUser(res: any, id: any): Promise<any>;
     updateUser(res: any, customerID: any, createCustomerDTO: CreateUsersDTO): Promise<any>;
     deleteUser(res: any, customerID: any): Promise<any>;
 }

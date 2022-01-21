@@ -17,6 +17,11 @@ export class UsersService {
     const customer = await this.userModel.findById(customerID).exec();
     return customer;
   }
+      // Get a single customer by Mail
+    async getUserByMail(email): Promise<User> {
+      const customer = await this.userModel.findOne({"email":email}).exec();
+      return customer;
+    }
   // post a single customer
   async addUser(createUsersDTO: CreateUsersDTO): Promise<User> {
     const newCustomer = await new this.userModel(createUsersDTO);

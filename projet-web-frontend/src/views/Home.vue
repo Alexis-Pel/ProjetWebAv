@@ -102,11 +102,10 @@
 </template>
 
 <script>
-// @ is an alias to /src
-//import HelloWorld from '@/components/HelloWorld.vue'
-//encrypt password
 //mport {getCookie} from "../assets/js/cookies.js"
 import {encrypt, decrypt} from "../assets/js/encryption"
+import { server } from "../helper";
+import axios from "axios";
 
 export default {
   data() {
@@ -118,6 +117,7 @@ export default {
       emailError: "",
       passwordError: "",
       isSubmitted: false,
+      user: null,
     };
   },
 
@@ -146,9 +146,33 @@ export default {
     var hashPassSub = encrypt(this.userData.password)
     console.log(hashPassSub)
     console.log(decrypt(hashPassSub))
-    window.alert("Envoyé")
-  }
-  }
+    this.checkUser();
+  },
+    checkPassword(){
+      var password = this.userData.password
+      var hashPassWord = this.user.hashPassword
+      if (decrypt(hashPassWord) == password){
+        //CONNEXION
+        console.log("connecté")
+      }
+      else{
+        //NOT GOOD PASSWORD
+        return
+      }
+    },
+    async checkUser() {
+      try{
+        await axios
+          .get(`${server.baseURL}/users/userbymail/${this.userData.email}`)
+          .then(data => (this.user = data.data));
+          console.log(this.user)
+          this.checkPassword()
+      }catch(e){
+        //NO USERS TO THIS MAIL
+        console.log("PAS D'UTILISATEUR")
+        }
+      }
+    }
 };
 </script>
 <style scoped>

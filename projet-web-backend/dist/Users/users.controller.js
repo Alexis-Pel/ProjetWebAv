@@ -31,8 +31,14 @@ let UsersController = class UsersController {
         const customers = await this.customerService.getAllUsers();
         return res.status(common_1.HttpStatus.OK).json(customers);
     }
-    async getUser(res, customerID) {
-        const customer = await this.customerService.getUser(customerID);
+    async getUserByMail(res, email) {
+        const customer = await this.customerService.getUserByMail(email);
+        if (!customer)
+            throw new common_1.NotFoundException('Customer does not exist!');
+        return res.status(common_1.HttpStatus.OK).json(customer);
+    }
+    async getUser(res, id) {
+        const customer = await this.customerService.getUser(id);
         if (!customer)
             throw new common_1.NotFoundException('Customer does not exist!');
         return res.status(common_1.HttpStatus.OK).json(customer);
@@ -72,9 +78,17 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getAllUsers", null);
 __decorate([
-    (0, common_1.Get)('customer/:customerID'),
+    (0, common_1.Get)('userbymail/:email'),
     __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Param)('customerID')),
+    __param(1, (0, common_1.Param)('email')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUserByMail", null);
+__decorate([
+    (0, common_1.Get)('user/:id'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)

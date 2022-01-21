@@ -28,6 +28,10 @@ let UsersService = class UsersService {
         const customer = await this.userModel.findById(customerID).exec();
         return customer;
     }
+    async getUserByMail(email) {
+        const customer = await this.userModel.findOne({ "email": email }).exec();
+        return customer;
+    }
     async addUser(createUsersDTO) {
         const newCustomer = await new this.userModel(createUsersDTO);
         return newCustomer.save();

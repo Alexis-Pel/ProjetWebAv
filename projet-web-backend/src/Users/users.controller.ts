@@ -34,14 +34,21 @@ export class UsersController {
     const customers = await this.customerService.getAllUsers();
     return res.status(HttpStatus.OK).json(customers);
   }
-
   // Fetch a particular customer using ID
-  @Get('customer/:customerID')
-  async getUser(@Res() res, @Param('customerID') customerID) {
-    const customer = await this.customerService.getUser(customerID);
+  @Get('userbymail/:email')
+  async getUserByMail(@Res() res, @Param('email') email) {
+    const customer = await this.customerService.getUserByMail(email);
     if (!customer) throw new NotFoundException('Customer does not exist!');
     return res.status(HttpStatus.OK).json(customer);
   }
+
+    // Fetch a particular customer using ID
+    @Get('user/:id')
+    async getUser(@Res() res, @Param('id') id) {
+      const customer = await this.customerService.getUser(id);
+      if (!customer) throw new NotFoundException('Customer does not exist!');
+      return res.status(HttpStatus.OK).json(customer);
+    }
 
   @Put('/update')
   async updateUser(
