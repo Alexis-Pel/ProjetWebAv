@@ -15,44 +15,44 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
-const create_users_dto_1 = require("./dto/create-users.dto");
+const create_users_dto_1 = require("./dto/create-users-dto");
 let UsersController = class UsersController {
-    constructor(usersService) {
-        this.usersService = usersService;
+    constructor(customerService) {
+        this.customerService = customerService;
     }
-    async addUsers(res, createUsersDTO) {
-        const users = await this.usersService.addUsers(createUsersDTO);
+    async addUser(res, createCustomerDTO) {
+        const customer = await this.customerService.addUser(createCustomerDTO);
         return res.status(common_1.HttpStatus.OK).json({
-            message: "Users has been created successfully",
-            users
+            message: 'Customer has been created successfully',
+            customer,
         });
     }
     async getAllUsers(res) {
-        const users = await this.usersService.getAllUsers();
-        return res.status(common_1.HttpStatus.OK).json(users);
+        const customers = await this.customerService.getAllUsers();
+        return res.status(common_1.HttpStatus.OK).json(customers);
     }
-    async getUsers(res, usersID) {
-        const users = await this.usersService.getUsers(usersID);
-        if (!users)
-            throw new common_1.NotFoundException('users does not exist!');
-        return res.status(common_1.HttpStatus.OK).json(users);
+    async getUser(res, customerID) {
+        const customer = await this.customerService.getUser(customerID);
+        if (!customer)
+            throw new common_1.NotFoundException('Customer does not exist!');
+        return res.status(common_1.HttpStatus.OK).json(customer);
     }
-    async updateUsers(res, usersID, createUsersDTO) {
-        const users = await this.usersService.updateUsers(usersID, createUsersDTO);
-        if (!users)
-            throw new common_1.NotFoundException('users does not exist!');
+    async updateUser(res, customerID, createCustomerDTO) {
+        const customer = await this.customerService.updateUser(customerID, createCustomerDTO);
+        if (!customer)
+            throw new common_1.NotFoundException('Customer does not exist!');
         return res.status(common_1.HttpStatus.OK).json({
-            message: 'Users has been successfully updated',
-            users
+            message: 'Customer has been successfully updated',
+            customer,
         });
     }
-    async deleteUsers(res, usersID) {
-        const users = await this.usersService.deleteUsers(usersID);
-        if (!users)
-            throw new common_1.NotFoundException('Users does not exist');
+    async deleteUser(res, customerID) {
+        const customer = await this.customerService.deleteUser(customerID);
+        if (!customer)
+            throw new common_1.NotFoundException('Customer does not exist');
         return res.status(common_1.HttpStatus.OK).json({
-            message: 'Users has been deleted',
-            users
+            message: 'Customer has been deleted',
+            customer,
         });
     }
 };
@@ -63,7 +63,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, create_users_dto_1.CreateUsersDTO]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "addUsers", null);
+], UsersController.prototype, "addUser", null);
 __decorate([
     (0, common_1.Get)('users'),
     __param(0, (0, common_1.Res)()),
@@ -72,30 +72,30 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getAllUsers", null);
 __decorate([
-    (0, common_1.Get)('users/:usersID'),
+    (0, common_1.Get)('customer/:customerID'),
     __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Param)('usersID')),
+    __param(1, (0, common_1.Param)('customerID')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "getUsers", null);
+], UsersController.prototype, "getUser", null);
 __decorate([
     (0, common_1.Put)('/update'),
     __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Query)('usersID')),
+    __param(1, (0, common_1.Query)('customerID')),
     __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, create_users_dto_1.CreateUsersDTO]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "updateUsers", null);
+], UsersController.prototype, "updateUser", null);
 __decorate([
     (0, common_1.Delete)('/delete'),
     __param(0, (0, common_1.Res)()),
-    __param(1, (0, common_1.Query)('usersID')),
+    __param(1, (0, common_1.Query)('customerID')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "deleteUsers", null);
+], UsersController.prototype, "deleteUser", null);
 UsersController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])

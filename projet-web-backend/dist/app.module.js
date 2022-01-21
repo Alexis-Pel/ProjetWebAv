@@ -17,8 +17,10 @@ let AppModule = class AppModule {
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forRoot('mongodb+srv://admin:admin@cluster0.ufmwy.mongodb.net/projetweb?retryWrites=true&w=majority', { useNewUrlParser: true }),
-            users_module_1.UsersModule
+            mongoose_1.MongooseModule.forRoot('mongodb+srv://admin:admin@cluster0.ufmwy.mongodb.net/projetweb?retryWrites=true&w=majority', {
+                useNewUrlParser: true,
+            }),
+            users_module_1.UsersModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

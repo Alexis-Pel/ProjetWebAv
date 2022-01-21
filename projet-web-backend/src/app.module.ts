@@ -5,8 +5,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://admin:admin@cluster0.ufmwy.mongodb.net/projetweb?retryWrites=true&w=majority', { useNewUrlParser: true }),
-    UsersModule
+    MongooseModule.forRoot(
+      'mongodb+srv://admin:admin@cluster0.ufmwy.mongodb.net/projetweb?retryWrites=true&w=majority',
+      {
+        useNewUrlParser: true,
+      },
+    ),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

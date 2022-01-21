@@ -17,34 +17,33 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("mongoose");
 const mongoose_2 = require("@nestjs/mongoose");
 let UsersService = class UsersService {
-    constructor(usersModel) {
-        this.usersModel = usersModel;
+    constructor(userModel) {
+        this.userModel = userModel;
     }
     async getAllUsers() {
-        const users = await this.usersModel.find().exec();
+        const users = await this.userModel.find().exec();
         return users;
     }
-    async getUsers(usersID) {
-        const users = await this.usersModel.findById(usersID).exec();
-        return users;
+    async getUser(customerID) {
+        const customer = await this.userModel.findById(customerID).exec();
+        return customer;
     }
-    async addUsers(createUsersDTO) {
-        const newUsers = await new this.usersModel(createUsersDTO);
-        return newUsers.save();
+    async addUser(createUsersDTO) {
+        const newCustomer = await new this.userModel(createUsersDTO);
+        return newCustomer.save();
     }
-    async updateUsers(usersID, createUsersDTO) {
-        const updatedUsers = await this.usersModel
-            .findByIdAndUpdate(usersID, createUsersDTO, { new: true });
-        return updatedUsers;
+    async updateUser(customerID, createCustomerDTO) {
+        const updatedCustomer = await this.userModel.findByIdAndUpdate(customerID, createCustomerDTO, { new: true });
+        return updatedCustomer;
     }
-    async deleteUsers(usersID) {
-        const deletedUsers = await this.usersModel.findByIdAndRemove(usersID);
-        return deletedUsers;
+    async deleteUser(customerID) {
+        const deletedCustomer = await this.userModel.findByIdAndRemove(customerID);
+        return deletedCustomer;
     }
 };
 UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, mongoose_2.InjectModel)('Users')),
+    __param(0, (0, mongoose_2.InjectModel)('User')),
     __metadata("design:paramtypes", [mongoose_1.Model])
 ], UsersService);
 exports.UsersService = UsersService;

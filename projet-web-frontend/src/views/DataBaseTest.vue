@@ -16,6 +16,7 @@
             <th scope="col">Email</th>
             <th scope="col">hashPassword</th>
             <th scope="col">Description</th>
+            <th scope="col">Image</th>
             <th scope="col">created_date</th>
             <th scope="col">Actions</th>
           </tr>
@@ -26,7 +27,8 @@
             <td>{{ user.email }}</td>
             <td>{{ user.hashPassword }}</td>
             <td>{{ user.description }}</td>
-            <td>{{ user.created_date }}</td>
+            <td>{{ user.img }}</td>
+            <td>{{ user.created_at }}</td>
             <td>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group" style="margin-bottom: 20px;">
@@ -56,7 +58,7 @@ export default {
   methods: {
     fetchUsers() {
       axios
-        .get(`${server.baseURL}/user/users`)
+        .get(`${server.baseURL}/users/users`)
         .then(data => (this.users = data.data));
     }
   }

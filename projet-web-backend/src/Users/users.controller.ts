@@ -1,55 +1,73 @@
-import { Controller, Get, Res, HttpStatus, Post, Body, Put, Query, NotFoundException, Delete, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Res,
+  HttpStatus,
+  Post,
+  Body,
+  Put,
+  Query,
+  NotFoundException,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUsersDTO } from './dto/create-users.dto';
+import { CreateUsersDTO } from './dto/create-users-dto';
 
 @Controller('users')
 export class UsersController {
-    constructor(private usersService: UsersService) { }
+  constructor(private customerService: UsersService) {}
 
-    // add a users
-    @Post('/create')
-    async addUsers(@Res() res, @Body() createUsersDTO: CreateUsersDTO) {
-        const users = await this.usersService.addUsers(createUsersDTO);
-        return res.status(HttpStatus.OK).json({
-            message: "Users has been created successfully",
-            users
-        })
-    }
+  // add a customer
+  @Post('/create')
+  async addUser(@Res() res, @Body() createCustomerDTO: CreateUsersDTO) {
+    const customer = await this.customerService.addUser(createCustomerDTO);
+    return res.status(HttpStatus.OK).json({
+      message: 'Customer has been created successfully',
+      customer,
+    });
+  }
 
-    // Retrieve userss list
-    @Get('users')
-    async getAllUsers(@Res() res) {
-        const users = await this.usersService.getAllUsers();
-        return res.status(HttpStatus.OK).json(users);
-    }
+  // Retrieve customers list
+  @Get('users')
+  async getAllUsers(@Res() res) {
+    const customers = await this.customerService.getAllUsers();
+    return res.status(HttpStatus.OK).json(customers);
+  }
 
-    // Fetch a particular users using ID
-    @Get('users/:usersID')
-    async getUsers(@Res() res, @Param('usersID') usersID) {
-        const users = await this.usersService.getUsers(usersID);
-        if (!users) throw new NotFoundException('users does not exist!');
-        return res.status(HttpStatus.OK).json(users);
-    }
-        // Update a users's details
-        @Put('/update')
-        async updateUsers(@Res() res, @Query('usersID') usersID, @Body() createUsersDTO: CreateUsersDTO) {
-            const users = await this.usersService.updateUsers(usersID, createUsersDTO);
-            if (!users) throw new NotFoundException('users does not exist!');
-            return res.status(HttpStatus.OK).json({
-                message: 'Users has been successfully updated',
-                users
-            });
-        }
-    
-        // Delete a users
-        @Delete('/delete')
-        async deleteUsers(@Res() res, @Query('usersID') usersID) {
-            const users = await this.usersService.deleteUsers(usersID);
-            if (!users) throw new NotFoundException('Users does not exist');
-            return res.status(HttpStatus.OK).json({
-                message: 'Users has been deleted',
-                users
-            })
-        }
-    
+  // Fetch a particular customer using ID
+  @Get('customer/:customerID')
+  async getUser(@Res() res, @Param('customerID') customerID) {
+    const customer = await this.customerService.getUser(customerID);
+    if (!customer) throw new NotFoundException('Customer does not exist!');
+    return res.status(HttpStatus.OK).json(customer);
+  }
+
+  @Put('/update')
+  async updateUser(
+    @Res() res,
+    @Query('customerID') customerID,
+    @Body() createCustomerDTO: CreateUsersDTO,
+  ) {
+    const customer = await this.customerService.updateUser(
+      customerID,
+      createCustomerDTO,
+    );
+    if (!customer) throw new NotFoundException('Customer does not exist!');
+    return res.status(HttpStatus.OK).json({
+      message: 'Customer has been successfully updated',
+      customer,
+    });
+  }
+
+  // Delete a customer
+  @Delete('/delete')
+  async deleteUser(@Res() res, @Query('customerID') customerID) {
+    const customer = await this.customerService.deleteUser(customerID);
+    if (!customer) throw new NotFoundException('Customer does not exist');
+    return res.status(HttpStatus.OK).json({
+      message: 'Customer has been deleted',
+      customer,
+    });
+  }
 }
