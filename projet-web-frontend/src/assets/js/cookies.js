@@ -14,3 +14,8 @@ function getCookie(cname) {
     return "";
   }
 export{getCookie}
+
+function setCookie(cname, content) {
+  document.cookie = cname+'='+content;
+}
+export{setCookie}

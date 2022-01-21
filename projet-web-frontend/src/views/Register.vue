@@ -220,8 +220,8 @@
                                     <div class="buttonContinuer">Continuer</div>
                                 </button>
                             </div>
-                            <button @click="message('C\'est bien')" type="button" class="buttonEnd">
-                                <div class="buttonEnd">Tu as déjà un compte ?</div>
+                            <button type="button" class="buttonEnd" style="text-decoration: none; display: inline-block; border:none;background-color:#36393f">
+                                <router-link to="/login" class="buttonEnd">Tu as déjà un compte ?</router-link>
                             </button>
                         </div>
                     </div>
@@ -239,7 +239,7 @@
 </template>
 
 <script>
-import { join } from 'path';
+//import { join } from 'path';
 // @ is an alias to /src
 //import HelloWorld from '@/components/HelloWorld.vue'
 
@@ -285,10 +285,10 @@ export default {
         }
 
 
-        j = this.userData.jour;
-        m = this.userData.mois;
-        a = this.userData.annee;
-
+        var j = this.userData.jour;
+        var m = this.userData.mois;
+        var a = this.userData.annee;
+        var fev;
         if( a%4 == 0 && a%100 != 0 || a%400 == 0) {fev = 29}
         else {fev = 28}
 

@@ -11,7 +11,12 @@
           </div>
           <div class="wrapper_form">
             <div class="email">
-              <p style="margin-bottom: 2px">E-MAIL <span style="font-size: 12px; color: red"> {{ emailError }}</span></p>
+              <h6 style="margin-bottom: 2px; font-size:12px">
+                E-MAIL
+                <span id="errorMail" style="font-size: 10px; color: red">{{
+                  emailError
+                }}</span>
+              </h6>
               <input
                 @click="emailError = ''"
                 type="email"
@@ -20,7 +25,14 @@
               />
             </div>
             <div class="password">
-              <p style="margin:0">MOT DE PASSE <span style="color: red; font-size: 10px; margin:0">{{ passwordError }}</span></p>
+              <h6 style="margin: 0;font-size:12px">
+                MOT DE PASSE
+                <span
+                  id="errorPassword"
+                  style="color: red; font-size: 10px; margin: 0"
+                  >{{ passwordError }}</span
+                >
+              </h6>
               <input
                 @click="passwordError = ''"
                 type="password"
@@ -31,7 +43,13 @@
                 @click="message('Tant pis pour toi !')"
                 type="button"
                 class="forget_button"
-                style="text-decoration: none; display: inline-block; border:none;background-color:#36393f;margin-top:5px"
+                style="
+                  text-decoration: none;
+                  display: inline-block;
+                  border: none;
+                  background-color: #36393f;
+                  margin-top: 5px;
+                "
               >
                 <div style="font-size: 100%; color: #01aef4">
                   Tu as oublié ton mot de passe ?
@@ -50,6 +68,8 @@
                 cursor: pointer;
                 width: 100%;
                 height: 44px;
+                border: 0px solid;
+                border-radius: 3px;
               "
             >
               <div style="color: #fff">Se connecter</div>
@@ -64,8 +84,18 @@
                 "
                 >Besoin d'un compte ?</span
               >
-              <button @click="message('Inscription de la noche')" type="button" style="text-decoration: none; display: inline-block; border:none;background-color:#36393f">
-                <div style="color: #01aef4">S'inscrire</div>
+              <button
+                type="button"
+                style="
+                  text-decoration: none;
+                  display: inline-block;
+                  border: none;
+                  background-color: #36393f;
+                "
+              >
+                <router-link style="color: #01aef4" to="/register"
+                  >S'inscrire</router-link
+                >
               </button>
             </div>
           </div>
@@ -102,10 +132,10 @@
 </template>
 
 <script>
-//mport {getCookie} from "../assets/js/cookies.js"
-import {encrypt, decrypt} from "../assets/js/encryption"
+import { decrypt, encrypt } from "../assets/js/encryption";
 import { server } from "../helper";
 import axios from "axios";
+import { setCookie } from "../assets/js/cookies";
 
 export default {
   data() {
@@ -117,16 +147,18 @@ export default {
       emailError: "",
       passwordError: "",
       isSubmitted: false,
+      isConnected: false,
       user: null,
     };
   },
 
   methods: {
+    //Validation of the mail and password format
     validateCred() {
       const mailformat =
         /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (this.userData.password == "") {
-        this.passwordError = "Password cannot be empty";
+        this.passwordError = "Invalid password";
         return;
       }
       if (this.userData.email.match(mailformat)) {
@@ -135,47 +167,51 @@ export default {
         this.emailError = "Invalid email address!";
       }
     },
+    //Show alert JS
     message(msg) {
       alert(msg);
-      console.log(document.cookie);
-      //document.cookie = "username=John Doe";
-      //console.log(getCookie("username"));
     },
-    submitted(){
-    this.isSubmitted = true
-    var hashPassSub = encrypt(this.userData.password)
-    console.log(hashPassSub)
-    console.log(decrypt(hashPassSub))
-    this.checkUser();
-  },
-    checkPassword(){
-      var password = this.userData.password
-      var hashPassWord = this.user.hashPassword
-      if (decrypt(hashPassWord) == password){
-        //CONNEXION
-        console.log("connecté")
-      }
-      else{
-        //NOT GOOD PASSWORD
-        return
+
+    //Make Submitted true then checkUser()
+    submitted() {
+      this.isSubmitted = true;
+      this.checkUser();
+    },
+
+    //Show message at login error
+    errorLogin() {
+      this.emailError = "Invalid email or password";
+      this.passwordError = "Invalid email or password";
+    },
+
+    //Check if password is the same
+    checkPassword() {
+      var password = this.userData.password;
+      var hashPassWord = this.user.hashPassword;
+      if (decrypt(hashPassWord) == password) {
+        setCookie("token_login", encrypt(this.user["_id"]));
+        this.isConnected = true;
+      } else {
+        this.errorLogin();
       }
     },
+
+    //Check if the user(mail) exist
     async checkUser() {
-      try{
+      try {
         await axios
           .get(`${server.baseURL}/users/userbymail/${this.userData.email}`)
-          .then(data => (this.user = data.data));
-          console.log(this.user)
-          this.checkPassword()
-      }catch(e){
-        //NO USERS TO THIS MAIL
-        console.log("PAS D'UTILISATEUR")
-        }
+          .then((data) => (this.user = data.data));
+        this.checkPassword();
+      } catch (e) {
+        this.errorLogin();
       }
-    }
+    },
+  },
 };
 </script>
 <style scoped>
+
 .separator {
   margin-left: 110px;
   border: 1px solid transparent;
@@ -265,7 +301,8 @@ input {
 }
 a,
 h2,
-p {
+p,
+h6 {
   font-family: "Helvetica Neue", serif;
 }
 </style>
