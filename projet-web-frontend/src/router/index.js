@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Creation from '../views/Creation.vue'
 import Users from '@/components/user' 
 
 Vue.use(VueRouter)
@@ -14,6 +15,11 @@ const routes = [
   {
     path: '/user',
     name: 'Users',
+    component: Users
+  },
+  {
+    path: '/Creation',
+    name: 'Creation',
     component: Users
   },
   //{
