@@ -15,7 +15,7 @@ export default {
   components: {},
 data() {
     return {
-      userData: {}
+      userLogged: {} //data of the logged user
     };
   },
   //Change URL If user is logged in(Only 1 time)
@@ -25,18 +25,18 @@ data() {
       try {
         await axios
           .get(`${server.baseURL}/users/user/${login}`)
-          .then((data) => (this.userData = data.data));
+          .then((data) => (this.userLogged = data.data));
           //If connected
           if(this.$route.name == "login"){
             router.push({name: "register"})//change to service url
           }
+          this.$root.$emit('userLogged', `${JSON.stringify(this.userLogged)}`) //EMIT THE LOGGED USER
           //If not Connected
       } catch (e) {
           if(this.$route.name == "login"){//change to services urls
             router.push({name: "login"})
           }
       }
-      console.log(this.userData)
     },
 }
 </script>

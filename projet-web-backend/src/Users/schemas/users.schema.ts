@@ -5,5 +5,6 @@ export const UsersSchema = new mongoose.Schema({
   email: String,
   description: String,
   img: String,
+  hashPassword: String,
   created_at: { type: Date, default: Date.now },
 });

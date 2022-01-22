@@ -152,7 +152,11 @@ export default {
       user: null,
     };
   },
-
+  //created(){
+  //  this.$root.$on('userLogged', (text) => {
+  //    console.log(text) // RECEIVE THE CONNECTED USER ON THIS COMPONENT
+  //})
+  //},
   methods: {
     //Validation of the mail and password format
     validateCred() {
@@ -192,6 +196,7 @@ export default {
       if (decrypt(hashPassWord) == password) {
         setCookie("token_login", encrypt(this.user["_id"]));
         this.isConnected = true;
+        console.log("connected")
       } else {
         this.errorLogin();
       }
