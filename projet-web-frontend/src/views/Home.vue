@@ -185,6 +185,7 @@ export default {
 
     //Show message at login error
     errorLogin() {
+      this.isSubmitted = false;
       this.emailError = "Invalid email or password";
       this.passwordError = "Invalid email or password";
     },

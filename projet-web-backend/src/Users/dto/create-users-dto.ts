@@ -4,5 +4,6 @@ export class CreateUsersDTO {
   readonly description: string;
   readonly img: string;
   readonly hashPassword: string;
+  readonly friends: Array<String>;
   readonly created_at: Date;
 }

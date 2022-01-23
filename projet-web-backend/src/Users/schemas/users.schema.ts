@@ -6,5 +6,6 @@ export const UsersSchema = new mongoose.Schema({
   description: String,
   img: String,
   hashPassword: String,
+  friends: Array,
   created_at: { type: Date, default: Date.now },
 });

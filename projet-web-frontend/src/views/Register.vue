@@ -373,6 +373,7 @@ export default {
         email: email,
         hashPassword: password,
         img: null,
+        friends: null,
         description: "",
       });
     },
