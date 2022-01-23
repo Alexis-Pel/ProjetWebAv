@@ -152,6 +152,7 @@ export default {
       user: null,
     };
   },
+  components: {},
   //created(){
   //  this.$root.$on('userLogged', (text) => {
   //    console.log(text) // RECEIVE THE CONNECTED USER ON THIS COMPONENT
@@ -197,6 +198,7 @@ export default {
       if (decrypt(hashPassWord) == password) {
         setCookie("token_login", encrypt(this.user["_id"]));
         this.isConnected = true;
+        this.$root.$emit('userLogged', `${JSON.stringify(this.user)}`) //EMIT THE LOGGED USER
         console.log("connected")
       } else {
         this.errorLogin();
