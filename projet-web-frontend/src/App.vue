@@ -27,13 +27,14 @@ data() {
           .get(`${server.baseURL}/users/user/${login}`)
           .then((data) => (this.userLogged = data.data));
           //If connected
-          if(this.$route.name == "login"){
-            router.push({name: "register"})//change to service url
+          if(this.$route.name == "login" || this.$route.name == "register"){
+            //router.push({name: "friends"})//change to service url
+            window.location = "/friends";
           }
           this.$root.$emit('userLogged', `${JSON.stringify(this.userLogged)}`) //EMIT THE LOGGED USER
           //If not Connected
       } catch (e) {
-          if(this.$route.name == "login"){//change to services urls
+          if(this.$route.name == "friends"){//change to services urls
             router.push({name: "login"})
           }
       }
