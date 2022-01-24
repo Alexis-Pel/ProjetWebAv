@@ -1,4 +1,4 @@
-<template class="azdza">
+<template>
   <div
   class="wrapper"
     style="

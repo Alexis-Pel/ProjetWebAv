@@ -12,6 +12,6 @@ export default new Router({
     { path: '/', redirect: { name: 'login' } },
     { path: '/login', name: 'login', component: HomeComponent },
     { path: '/register', name: 'register', component: CreationComponent},
-    { path: '/friends', name: 'friends', component: FriendList}
+    { path: '/friends', name: 'friends', component: FriendList},
   ]
 });
