@@ -5,7 +5,7 @@
         class="wrapperBox"
         style="opacity: 1; transform: scale(1) translateY(0px) translateZ(0px)"
       >
-        <form class="authbox">
+        <div class="authbox">
           <div class="centerinWrapper">
             <h3 class="title">Créer un compte</h3>
             <div class="block">
@@ -312,14 +312,20 @@
               </button>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
     <div class="card" v-if="isSubmitted">
       <div class="card-body">
         <h4 class="card-title">Form Data</h4>
         <p>
+          Pseudo: <b>{{ userData.pseudo }}</b>
+        </p>
+        <p>
           Mail: <b>{{ userData.email }}</b>
+        </p>
+        <p>
+          jour de naissance: <b>{{ userData.jour }}/{{ userData.mois }}/{{ userData.annee }}</b>
         </p>
         <p>
           Password: <b>{{ userData.password }}</b>
@@ -415,7 +421,7 @@ export default {
       }
 
       const nbJours = Array(31, fev, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-      if ((m >= 1 && m <= 12 && j >= 1 && j <= nbJours[m - 1]) == false) {
+      if ((m >= 1 && m <= 12 && j >= 1 && j <= nbJours[m - 1] && a !="") == false) {
         this.dateError = "Veuillez entrer une date existante.";
         return;
       }
