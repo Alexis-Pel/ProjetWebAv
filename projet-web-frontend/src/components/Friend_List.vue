@@ -1,17 +1,17 @@
-<template>
+<template class="azdza">
   <div
+  class="wrapper"
     style="
       background-color: #36393f;
-      display: flex;
       width: 100%;
-      flex-direction: column;
+      height:1000px;
     "
   >
   <div>
     <section class="container"><div class=""><div class=""></div></div></section>
   </div>
   <div>
-    <div style="margin: 16px 20px 8px 30px;flex:none"><div style="position: relative;flex-direction:row;flex-wrap: wrap;padding: 1px;min-width: 0;"><input style="font-size: 16px;color:#dcddde;background-color:#1f2225;border:none;appearance: none;width:100%;min-width: 48px;line-height: 32px;height: 30px;padding: 0 8px;" placeholder="Rechercher" value=""><div class="iconLayout-3Bjizv medium-2NClDM" tabindex="-1" role="button"><div class="iconContainer-6pgShY"></div></div></div></div>
+    <div class="friends_container" style="margin: 16px 20px 8px 30px;flex: 1 1 auto;;height: 100%;"><div style="position: relative;flex-direction:row;flex-wrap: wrap;padding: 1px;min-width: 0;"><input style="font-size: 16px;color:#dcddde;background-color:#1f2225;border:none;appearance: none;width:100%;min-width: 48px;line-height: 32px;height: 30px;padding: 0 8px;" placeholder="Rechercher" value=""><div class="iconLayout-3Bjizv medium-2NClDM" tabindex="-1" role="button"><div class="iconContainer-6pgShY"></div></div></div></div>
     <h5>Tous les amis - {{ friendList.length }}</h5>
       <ul>
         <div>
