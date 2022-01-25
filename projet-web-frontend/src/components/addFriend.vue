@@ -30,18 +30,113 @@
             padding-left: 8px;
           "
         >
-          <input placeholder="Entre un nom d'utilisateur" />
-          <button type="submit" disabled="" class="">
+          <input
+            @input="checkLength()"
+            v-model="userToSearch"
+            placeholder="Entre un nom d'utilisateur#000"
+          />
+          <button
+            @click="checkUser()"
+            id="sendInvite"
+            type="button"
+            disabled=""
+            class=""
+          >
             <div>Envoyer une demande d'ami</div>
           </button>
         </div>
       </form>
+      <div id="ErrorForm" class="Error">
+        Mhm, ça n'a pas marché. Vérifie bien que la casse, l'orthographe, les
+        espaces et les chiffres sont corrects.
+      </div>
     </header>
     <div></div>
   </div>
 </template>
 
+<script>
+import { getCookie } from "../assets/js/cookies";
+import { server } from "../helper";
+import axios from "axios";
+import { decrypt } from "../assets/js/encryption";
+
+export default {
+  components: {},
+  data() {
+    return {
+      loggedID: "",
+      userToSearch: "",
+      friend: "",
+    };
+  },
+  async beforeMount() {
+    var login = getCookie("token_login");
+    login = decrypt(login);
+    try {
+      await axios
+        .get(`${server.baseURL}/users/user/${login}`)
+        .then((data) => (this.loggedID = data.data._id));
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  methods: {
+    checkLength() {
+      document.getElementById("ErrorForm").style.display = "none"
+      if (this.userToSearch.length >= 4) {
+        document.getElementById("sendInvite").disabled = false;
+        document.getElementById("sendInvite").style.opacity = "1";
+        document.getElementById("sendInvite").style.cursor = "default";
+      } else {
+        document.getElementById("sendInvite").disabled = true;
+        document.getElementById("sendInvite").style.opacity = ".5";
+        document.getElementById("sendInvite").style.cursor = "not-allowed";
+      }
+    },
+    errorForm(){
+      document.getElementById("ErrorForm").style.display = "block"
+    },
+    async checkUser() {
+      const user = this.userToSearch.split("#");
+      if (user.length != 2) {
+        this.errorForm()
+      }
+      try {
+        await axios
+          .get(`${server.baseURL}/users/user/${user[1]}`)
+          .then((data) => (this.friend = data.data.pseudo));
+      } catch (error) {
+        this.errorForm()
+      }
+
+      if (this.friend === user[0]) {
+        console.log(user);
+        try {
+          await axios.put(
+            `${server.baseURL}/users/update?customerID=${user[1]}`,
+            { pendingFriends: this.loggedID }
+          );
+        } catch (error) {
+          this.errorForm()
+        }
+      }
+    },
+  },
+};
+</script>
+
+
 <style scoped>
+.Error {
+  font-family: "Helvetica Neue";
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: red;
+  margin-top: 8px;
+  display: none;
+}
 button {
   cursor: not-allowed;
   width: auto;
@@ -110,7 +205,7 @@ input {
   display: flex;
   position: relative;
   font-family: "Helvetica Neue";
-  width: 68%;
+  width: 66%;
   border: none;
   font-size: 16px;
   font-weight: 500;
@@ -118,6 +213,7 @@ input {
   line-height: 20px;
   white-space: pre;
   height: 40px;
+  margin-right: 2%;
 }
 form {
   width: 100%;
