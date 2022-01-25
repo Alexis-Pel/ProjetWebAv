@@ -107,6 +107,7 @@
                   class="selectMois"
                   id="mois"
                   name="mois"
+                  @click="dateError"
                 >
                   <option value="1">janvier</option>
                   <option value="2">février</option>
@@ -127,6 +128,7 @@
                   class="selectAnnee"
                   id="annee"
                   name="annee"
+                  @click="dateError"
                 >
                   <option value="1900">1900</option>
                   <option value="1901">1901</option>
@@ -315,23 +317,6 @@
         </div>
       </div>
     </div>
-    <div class="card" v-if="isSubmitted">
-      <div class="card-body">
-        <h4 class="card-title">Form Data</h4>
-        <p>
-          Pseudo: <b>{{ userData.pseudo }}</b>
-        </p>
-        <p>
-          Mail: <b>{{ userData.email }}</b>
-        </p>
-        <p>
-          jour de naissance: <b>{{ userData.jour }}/{{ userData.mois }}/{{ userData.annee }}</b>
-        </p>
-        <p>
-          Password: <b>{{ userData.password }}</b>
-        </p>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -342,6 +327,7 @@
 import { encrypt } from "../assets/js/encryption";
 import { server } from "../helper";
 import axios from "axios";
+import router from "../router";
 
 export default {
   data() {
@@ -382,6 +368,7 @@ export default {
         friends: null,
         description: "",
       });
+      router.push({ name: "login" });
     },
     changeButtonColor() {
       if (this.userData.condition != true) {
@@ -395,8 +382,8 @@ export default {
       }
     },
     validateCred() {
-      const mailformat =
-        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      this.dateError = "";
+      const mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (this.userData.hashPassword == "") {
         this.passwordError = "Password cannot be empty.";
         return;
@@ -421,8 +408,11 @@ export default {
       }
 
       const nbJours = Array(31, fev, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-      if ((m >= 1 && m <= 12 && j >= 1 && j <= nbJours[m - 1] && a !="") == false) {
+      if (
+        (m >= 1 && m <= 12 && j >= 1 && j <= nbJours[m - 1] && a != "") == false
+      ) {
         this.dateError = "Veuillez entrer une date existante.";
+        this.conditionError = "Veuillez accepter les conditions générales.";
         return;
       }
 
