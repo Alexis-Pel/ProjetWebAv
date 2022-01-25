@@ -14,11 +14,19 @@
       >
         <button
           style="margin-right: 10%; margin-top: 15px;margin-bottom:1px"
+          @click="changeComponent('waitingFriend')"
+          class="addFriend"
+        >
+          <span>En attente</span>
+        </button>
+        <button
+          style="margin-right: 10%; margin-top: 15px;margin-bottom:1px"
           @click="changeComponent('addFriend')"
           class="addFriend"
         >
           <span>Ajouter un ami</span>
         </button>
+        
       </div>
       <div style="width: 100%; display: flex; height:100%">
         <component :is="activeComponent"></component>
@@ -30,6 +38,7 @@
 <script>
 import friendListComponent from "../components/Friend_List.vue";
 import addFriend from "../components/addFriend.vue";
+import waitingFriend from "../components/waitingFriend.vue"
 export default {
   data() {
     return {
@@ -39,11 +48,15 @@ export default {
   components: {
     friendListComponent,
     addFriend,
+    waitingFriend,
   },
   methods: {
     changeComponent(name) {
       if (name == "addFriend") {
         this.activeComponent = addFriend;
+      }
+      if (name == "waitingFriend") {
+        this.activeComponent = waitingFriend;
       }
     },
   },
