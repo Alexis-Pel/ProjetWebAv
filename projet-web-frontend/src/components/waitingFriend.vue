@@ -24,6 +24,25 @@
             </button>
           </div>
       </div>
+      <div class="request">
+          <div class="left-box">
+            <div class="img">
+                <img src="@/assets/check.png" alt="check">
+                </div>
+            <div class="pseudo-text">
+                <div class="pseudo">pseudo</div>
+                <div class="text"><p>Demande d'ami reçue</p></div>
+            </div>
+          </div>
+          <div class="right-box">
+              <button class="yes">
+                <img src="@/assets/check.png" alt="check">
+            </button>
+            <button class="no">
+                <img src="@/assets/croix.png" alt="croix">
+            </button>
+          </div>
+      </div>
     </header>
   </div>
   
@@ -51,7 +70,6 @@ header {
   flex-direction: column;
   align-items: flex-start;
   height: fit-content;
-  border-bottom: 1px solid #424549;
   padding-bottom: 20px;
   padding-left: 30px;
   padding-right: 30px;
@@ -80,6 +98,9 @@ header {
 .request{
     display: flex;
     width: 100%;
+    margin-top: 5%;
+    border-bottom: 1px solid #424549;
+
 }
 .left-box{
     display: flex;
@@ -95,6 +116,7 @@ img{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    padding-left: 5%;
 }
 .pseudo{
     color: white;
