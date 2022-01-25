@@ -8,9 +8,6 @@
     "
   >
   <div>
-    <section class="container"><div class=""><div class=""></div></div></section>
-  </div>
-  <div>
     <div class="friends_container" style="margin: 16px 20px 8px 30px;flex: 1 1 auto;;height: 100%;"><div style="position: relative;flex-direction:row;flex-wrap: wrap;padding: 1px;min-width: 0;"><input style="font-size: 16px;color:#dcddde;background-color:#1f2225;border:none;appearance: none;width:100%;min-width: 48px;line-height: 32px;height: 30px;padding: 0 8px;" placeholder="Rechercher" value=""><div class="iconLayout-3Bjizv medium-2NClDM" tabindex="-1" role="button"><div class="iconContainer-6pgShY"></div></div></div></div>
     <h5>Tous les amis - {{ friendList.length }}</h5>
       <ul>
@@ -63,8 +60,6 @@ export default {
     },
   },
 };
-//testfriends@gmail.com
-//test
 </script>
 
 <style scoped>
@@ -111,20 +106,20 @@ ul {
   color: #fff;
   font-weight: 600;
 }
-.container{
+.container {
   position: relative;
-    display: flex;
-    align-items: center;
-    min-width: 0;
-    width: 100%;
-    flex: 0 0 auto;
-    height: 48px;
-    padding: 0 8px;
-    font-size: 16px;
-    line-height: 20px;
-    cursor: default;
-    z-index: 2;
-    color: #dcddde;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  width: 100%;
+  flex: 0 0 auto;
+  height: 48px;
+  padding: 0 8px;
+  font-size: 16px;
+  line-height: 20px;
+  cursor: default;
+  z-index: 2;
+  color: #dcddde;
 }
 img {
   width: 100%;
@@ -133,5 +128,40 @@ img {
   flex-shrink: 0;
   position: relative;
   border-radius: 50%;
+}
+.container-ZMc96U {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  min-width: 0;
+  width: 100%;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  height: 48px;
+  padding: 0 8px;
+  font-size: 16px;
+  line-height: 20px;
+  cursor: default;
+  z-index: 2;
+  color: var(--text-normal);
+}
+.children-3xh0VB {
+  position: relative;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
 }
 </style>

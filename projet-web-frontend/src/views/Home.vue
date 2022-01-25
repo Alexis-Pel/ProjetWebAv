@@ -117,17 +117,6 @@
         </div>
       </div>
     </div>
-    <div class="card" v-if="isSubmitted">
-      <div class="card-body">
-        <h4 class="card-title">Form Data</h4>
-        <p>
-          Mail: <b>{{ userData.email }}</b>
-        </p>
-        <p>
-          Password: <b>{{ userData.password }}</b>
-        </p>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -199,7 +188,7 @@ export default {
         setCookie("token_login", encrypt(this.user["_id"]));
         this.isConnected = true;
         this.$root.$emit('userLogged', `${JSON.stringify(this.user)}`) //EMIT THE LOGGED USER
-        console.log("connected")
+        window.location = "/friends";
       } else {
         this.errorLogin();
       }
