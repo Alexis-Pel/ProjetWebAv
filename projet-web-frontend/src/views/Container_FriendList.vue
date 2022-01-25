@@ -335,7 +335,7 @@ a:hover {
 .friendLink {
   background-color: #393c42;
   position: relative;
-  max-width: 224px;
+  max-width: 94%;
   box-sizing: border-box;
   display: block;
   padding: 1px 0;
@@ -346,7 +346,7 @@ a:hover {
 }
 .storeLink {
   position: relative;
-  max-width: 224px;
+  max-width: 94%;
   box-sizing: border-box;
   display: block;
   padding: 1px 0;
