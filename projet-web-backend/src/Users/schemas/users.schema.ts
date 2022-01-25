@@ -8,4 +8,5 @@ export const UsersSchema = new mongoose.Schema({
   hashPassword: String,
   friends: Array,
   created_at: { type: Date, default: Date.now },
+  pendingFriends: Array,
 });

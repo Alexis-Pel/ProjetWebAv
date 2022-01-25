@@ -8,4 +8,5 @@ export interface User extends Document {
   readonly hashPassword: string;
   readonly friends: Array<String>;
   readonly created_at: Date;
+  readonly pendingFriends: Array<String>;
 }
