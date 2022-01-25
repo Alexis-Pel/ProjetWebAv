@@ -1,6 +1,6 @@
 <template>
   <div style="display: flex; height: 100%">
-    <div style="display: flex; width: 40%">
+    <div style="display: flex; width: 28%">
       <div style="background-color: #1f2225; height: 100%; width: 23%"></div>
       <div style="width: 77%; height: 100%; background-color: #2e3136">
         <nav style="height: 94%">
