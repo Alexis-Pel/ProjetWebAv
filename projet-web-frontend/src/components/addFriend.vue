@@ -15,21 +15,7 @@
           Tu peux ajouter un ami grâce à son Discord Tag. Attention aux
           mAjUsCuLeS !
         </div>
-        <div
-          style="
-            width: 100%;
-            background-color: #303338;
-            border: 1px solid #232427;
-            margin-top: 16px;
-            padding: 0 12px;
-            border-radius: 8px;
-            flex: 1 1 auto;
-            display: flex;
-            margin-right: 16px;
-            padding: 4px 0;
-            padding-left: 8px;
-          "
-        >
+        <div id="inputDiv" class="InputDiv">
           <input
             @input="checkLength()"
             v-model="userToSearch"
@@ -46,12 +32,28 @@
           </button>
         </div>
       </form>
+      <div id="SucessForm" class="Success">
+        Bravo! Ta demande d'ami a été envoyée à
+        <strong>{{ this.userToSearch }}</strong>
+      </div>
       <div id="ErrorForm" class="Error">
         Mhm, ça n'a pas marché. Vérifie bien que la casse, l'orthographe, les
         espaces et les chiffres sont corrects.
       </div>
     </header>
-    <div></div>
+    <div
+      style="
+        display: flex;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div style="display: flex; justify-content: center;flex-direction:column;align-items:center">
+        <div class="img"></div>
+        <div style="color:#72767d;font-size: 16px;line-height: 20px;">Wumpus attend des amis. Mais rien ne t'oblige à en ajouter !</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -83,7 +85,9 @@ export default {
   },
   methods: {
     checkLength() {
-      document.getElementById("ErrorForm").style.display = "none"
+      document.getElementsByClassName('Success')[0].style.display = "none";
+      document.getElementsByClassName('Error')[0].styledisplay = "none";
+      document.getElementsByClassName('InputDiv')[0].style.border = "1px solid #232427";
       if (this.userToSearch.length >= 4) {
         document.getElementById("sendInvite").disabled = false;
         document.getElementById("sendInvite").style.opacity = "1";
@@ -94,20 +98,25 @@ export default {
         document.getElementById("sendInvite").style.cursor = "not-allowed";
       }
     },
-    errorForm(){
-      document.getElementById("ErrorForm").style.display = "block"
+    errorForm() {
+      document.getElementsByClassName('Error')[0].style.display = "block";
+      document.getElementsByClassName('InputDiv')[0].style.border = "1px solid #ff0000";
+    },
+    successForm() {
+      document.getElementsByClassName('Success')[0].style.display = "block";
+      document.getElementsByClassName('InputDiv')[0].style.border = "1px solid #4fdc7c";
     },
     async checkUser() {
       const user = this.userToSearch.split("#");
       if (user.length != 2) {
-        this.errorForm()
+        this.errorForm();
       }
       try {
         await axios
           .get(`${server.baseURL}/users/user/${user[1]}`)
           .then((data) => (this.friend = data.data.pseudo));
       } catch (error) {
-        this.errorForm()
+        this.errorForm();
       }
 
       if (this.friend === user[0]) {
@@ -118,7 +127,7 @@ export default {
             { pendingFriends: this.loggedID }
           );
         } catch (error) {
-          this.errorForm()
+          this.errorForm();
         }
       }
     },
@@ -128,12 +137,41 @@ export default {
 
 
 <style scoped>
+#inputDiv {
+  width: 100%;
+  background-color: #303338;
+  border: 1px solid #232427;
+  margin-top: 16px;
+  padding: 0 12px;
+  border-radius: 8px;
+  flex: 1 1 auto;
+  display: flex;
+  margin-right: 16px;
+  padding: 4px 0;
+  padding-left: 8px;
+}
+.img {
+  flex: 0 1 auto;
+  width: 376px;
+  height: 162px;
+  background-image: url("../assets/wumpus_add_friend.svg");
+}
 .Error {
   font-family: "Helvetica Neue";
   font-size: 14px;
   line-height: 20px;
   font-weight: 400;
-  color: red;
+  color: #ff0000;
+  margin-top: 8px;
+  display: none;
+}
+
+.Success {
+  font-family: "Helvetica Neue";
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #4fdc7c;
   margin-top: 8px;
   display: none;
 }
@@ -158,7 +196,7 @@ button {
   padding: 2px 16px;
   min-height: 32px;
   width: auto;
-  margin-top: 5px;
+  margin-top: 3px;
   margin-right: 10px;
 }
 h2 {
@@ -197,6 +235,7 @@ header {
   font-size: 100%;
   vertical-align: baseline;
   background-color: #36393e;
+  flex-direction: column;
 }
 input {
   align-items: center;
