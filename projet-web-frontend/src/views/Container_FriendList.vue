@@ -113,8 +113,36 @@
               </div>
             </a>
             <h2 class="createPrivate">
-              <span class="spanPM" style="width:100%; text-align:left;">Messages Privés</span>
-              <div class="buttonPM" role="button"><svg style="flex: 0;width: 16px;height: 16px;margin-left: 0;margin-right: 2px;" x="0" y="0" class="privateChannelRecipientsInviteButtonIcon-1ObKXK icon-2xnN2Y" aria-hidden="false" width="24" height="24" viewBox="0 0 18 18"><polygon fill-rule="nonzero" fill="currentColor" points="15 10 10 10 10 15 8 15 8 10 3 10 3 8 8 8 8 3 10 3 10 8 15 8"></polygon></svg></div>
+              <span class="spanPM" style="width: 100%; text-align: left"
+                >Messages Privés</span
+              >
+              <div class="buttonPM" role="button">
+                <svg
+                  style="
+                    flex: 0;
+                    width: 16px;
+                    height: 16px;
+                    margin-left: 0;
+                    margin-right: 2px;
+                  "
+                  x="0"
+                  y="0"
+                  class="
+                    privateChannelRecipientsInviteButtonIcon-1ObKXK
+                    icon-2xnN2Y
+                  "
+                  aria-hidden="false"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 18 18"
+                >
+                  <polygon
+                    fill-rule="nonzero"
+                    fill="currentColor"
+                    points="15 10 10 10 10 15 8 15 8 10 3 10 3 8 8 8 8 3 10 3 10 8 15 8"
+                  ></polygon>
+                </svg>
+              </div>
             </h2>
           </div>
         </nav>
@@ -146,22 +174,30 @@
       <div
         style="
           display: flex;
-          justify-content: flex-end;
+          justify-content: space-around;
           width: 100%;
           background-color: #36393e;
           border-bottom: 1px solid #2b2e31;
           padding-bottom: 10px;
         "
       >
-        <button
-          style="margin-right: 10%; margin-top: 15px; margin-bottom: 1px"
-          @click="changeComponent('waitingFriend')"
-          class="addFriend"
+      <h3 style="display:flex;align-items:center;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;color: #fff;line-height: 18px;font-weight: 600;font-size:16px;margin-top: 14px;margin-bottom:0;border-right:1px solid #424549;padding-right:15px">Amis</h3>
+        <a
+          @click="changeComponent('listFriends')"
+          style="margin-right: 10%; margin-top: 15px; margin-bottom: 1px;color:#b9bbbe"
+          class="allFriends"
         >
-          <span>En attente</span>
-        </button>
+          <span class="spanTous" style="padding-right:8px;padding-left:8px;cursor:pointer">Tous</span>
+        </a>
+        <a
+          style="margin-right: 10%; margin-top: 15px; margin-bottom: 1px;color:#b9bbbe;"
+          @click="changeComponent('waitingFriend')"
+          class="pendingFriends"
+        >
+          <span class="spanAttente" style="padding-right:8px;padding-left:8px;cursor:pointer">En attente</span>
+        </a>
         <button
-          style="margin-right: 10%; margin-top: 15px; margin-bottom: 1px"
+          style="margin-right: 10%; margin-top: 15px; margin-bottom: 1px;"
           @click="changeComponent('addFriend')"
           class="addFriend"
         >
@@ -226,14 +262,22 @@ export default {
 </script>
 
 <style scoped>
-.buttonPM{
+.spanTous:hover{
+  color: #fff;
+}
+.spanAttente:hover{
+color: #fff;
+}
+.buttonPM {
   cursor: pointer;
 }
-.buttonPM:hover{
+.buttonPM:hover {
   color: #fff;
+  cursor: pointer;
 }
-.spanPM:hover{
+.spanPM:hover {
   color: #fff;
+  cursor: pointer;
 }
 .createPrivate {
   display: flex;
