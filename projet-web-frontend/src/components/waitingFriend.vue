@@ -1,52 +1,187 @@
 <template>
   <div class="main-container">
     <header>
-      <h2>En attente d'amis</h2>
-      <div class="sous-titre">
-        Il n'y a aucune demande d'ami en attente. Essaye de manger des curlys!
+      <div v-if="pendingInfos.length == 0" class="pasDamis">
+        <h2>En attente d'amis</h2>
+        <div class="sous-titre">
+          Il n'y a aucune demande d'ami en attente. Essaye de manger des curlys!
+        </div>
       </div>
-      <div class="request">
-          <div class="left-box">
-            <div class="img">
-                <img src="@/assets/check.png" alt="check">
-                </div>
-            <div class="pseudo-text">
-                <div class="pseudo">pseudo</div>
-                <div class="text"><p>Demande d'ami reçue</p></div>
+      <div class="wrapper" v-else>
+        <div
+          class="friends_container"
+          style="margin: 16px 20px 8px 4%; flex: 1 1 auto; height: 100%"
+        >
+          <div
+            style="
+              position: relative;
+              flex-direction: row;
+              flex-wrap: wrap;
+              padding: 1px;
+              min-width: 0;
+            "
+          >
+            <input
+              style="
+                font-size: 16px;
+                color: #dcddde;
+                background-color: #1f2225;
+                border: none;
+                appearance: none;
+                width: 100%;
+                min-width: 48px;
+                line-height: 32px;
+                height: 30px;
+                padding: 0 8px;
+              "
+              placeholder="Rechercher"
+              value=""
+            />
+            <div
+              class="iconLayout-3Bjizv medium-2NClDM"
+              tabindex="-1"
+              role="button"
+            >
+              <div class="iconContainer-6pgShY"></div>
             </div>
           </div>
-          <div class="right-box">
-              <button class="yes">
-                <img src="@/assets/check.png" alt="check">
-            </button>
-            <button class="no">
-                <img src="@/assets/croix.png" alt="croix">
-            </button>
-          </div>
-      </div>
-      <div class="request">
-          <div class="left-box">
-            <div class="img">
-                <img src="@/assets/check.png" alt="check">
+        </div>
+        <div class="sousWrapper">
+          <h3>EN ATTENTE - {{ pendingInfos.length }}</h3>
+          <ul v-for="friend in pendingInfos" :key="friend._id" class="list">
+            <li>
+              <div class="request">
+                <div class="left-box">
+                  <div class="img">
+                    <img :src="friend.img" />
+                  </div>
+                  <div class="pseudo-text">
+                    <div class="pseudo">{{ friend.pseudo }}</div>
+                    <div class="text"><p>Demande d'ami reçue</p></div>
+                  </div>
                 </div>
-            <div class="pseudo-text">
-                <div class="pseudo">pseudo</div>
-                <div class="text"><p>Demande d'ami reçue</p></div>
-            </div>
-          </div>
-          <div class="right-box">
-              <button class="yes">
-                <img src="@/assets/check.png" alt="check">
-            </button>
-            <button class="no">
-                <img src="@/assets/croix.png" alt="croix">
-            </button>
-          </div>
+                <div class="right-box">
+                  <div class="divButYes">
+                    <button class="yes" @click="acceptedFriend(friend._id)">
+                      <img
+                        class="imgBut"
+                        src="@/assets/check.png"
+                        alt="check"
+                      />
+                    </button>
+                  </div>
+                  <div class="divButNo">
+                    <button class="no">
+                      <img
+                        class="imgBut"
+                        src="@/assets/croix.png"
+                        alt="croix"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </header>
   </div>
-  
 </template>
+
+
+<script>
+import { getCookie } from "../assets/js/cookies";
+import { server } from "../helper";
+import axios from "axios";
+import { decrypt } from "../assets/js/encryption";
+
+export default {
+  data() {
+    return {
+      pendingInvites: [],
+      pendingInfos: [],
+      logedId: null,
+    };
+  },
+
+  async beforeMount() {
+    var login = getCookie("token_login");
+    login = decrypt(login);
+    try {
+      await axios
+        .get(`${server.baseURL}/users/user/${login}`)
+        .then(
+          (data) => (
+            (this.pendingInvites = data.data.pendingFriends),
+            (this.logedId = data.data._id)
+          )
+        );
+      console.log(this.pendingInvites);
+
+      for (let index = 0; index < this.pendingInvites.length; index++) {
+        const id = this.pendingInvites[index];
+        console.log(id);
+        try {
+          await axios
+            .get(`${server.baseURL}/users/user/${id}`)
+            .then((data) => this.pendingInfos.push(data.data));
+
+          console.log(this.pendingInfos);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  },
+
+  methods: {
+    async acceptedFriend(idFriend) {
+      /*
+      var friendFriends = this.getFriend(idFriend);
+      friendFriends.push(this.logedId);
+      this.setFriend(idFriend, friendFriends);
+      var myFriends = this.getFriend(this.logedId);
+      myFriends.push(idFriend);
+      this.setFriend(this.logedId, myFriends);
+*/
+      var index = this.pendingInvites.indexOf(idFriend);
+      //this.pendingInvites = this.pendingInvites.slice(index,1);
+      //this.pendingInfos.splice(index,1);
+      this.pendingInfos = this.pendingInfos.slice(index);
+
+      console.log(this.pendingInvites);
+      console.log(this.pendingInfos);
+    },
+
+    async setFriend(id, addFriends) {
+      try {
+        await axios.put(`${server.baseURL}/users/update?customerID=${id}`, {
+          friends: addFriends,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async getFriend(id) {
+      var localFriend;
+      try {
+        await axios
+          .get(`${server.baseURL}/users/user/${id}`)
+          .then((data) => (localFriend = data.data.friends));
+      } catch (error) {
+        console.log(error);
+      }
+      return localFriend;
+    },
+  },
+};
+</script>
+
+
 
 
 <style scoped>
@@ -58,22 +193,18 @@ h2 {
   text-transform: uppercase;
   font-weight: 600;
 }
-.sous-titre{
-    color: white;
-    color: #b9bbbe;
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: 400;
+.sous-titre {
+  color: white;
+  color: #b9bbbe;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
 }
 header {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   height: fit-content;
-  padding-bottom: 20px;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-top: 20px;
   width: 100%;
 }
 .main-container {
@@ -94,94 +225,104 @@ header {
   background-color: #36393e;
   color: yellow;
 }
-
-.request{
-    display: flex;
-    width: 100%;
-    margin-top: 5%;
-    border-bottom: 1px solid #424549;
-
+.pasDamis {
+  padding-bottom: 20px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 20px;
 }
-.left-box{
-    display: flex;
-    width: 50%;
+.wrapper {
+  width: 100%;
 }
-img{
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    
+.sousWrapper {
+  margin-top: 3%;
 }
-.pseudo-text{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding-left: 5%;
+h3 {
+  color: #b9bbbe;
+  font-size: 80%;
+  text-align: left;
+  font-weight: bold;
+  margin: 0%;
+  margin-left: 4%;
+  margin-right: 0%;
+  margin-top: 1%;
+  margin-bottom: 2%;
 }
-.pseudo{
-    color: white;
-    font-size: 100%;
-    font-weight: bold;
+.list {
+  list-style-type: none;
+  margin: 0%;
+  padding: 0%;
 }
-.text{
-    color: #b9bbbe
-    
+.request {
+  display: flex;
+  padding-top: 2%;
+  margin-left: 4%;
+  width: 100%;
+  border-top: 1px solid #424549;
 }
-.right-box{
-    display: flex;
-    justify-content: flex-end;
-    width: 50%;
-    color: white;
-
- 
+.request:hover {
+  background-color: #42464d;
 }
-.yes{
-    margin: 0%;
-    margin-right: 5%;
-    padding: 4%;
-    padding-right: 0%;
-
-     
-background-color: #36393e; 
-  border: none;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 4px;
-  cursor: pointer;
+.left-box {
+  display: flex;
+  width: 45%;
+}
+img {
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-
+}
+.pseudo-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 5%;
+}
+.pseudo {
+  color: white;
+  font-size: 100%;
+  font-weight: bold;
+}
+.text {
+  color: #b9bbbe;
+}
+.right-box {
+  display: flex;
+  justify-content: flex-end;
+  width: 50%;
+  color: white;
+}
+.divButYes {
+  padding: 0%;
+padding-top: 0.5%;
+  padding-bottom: 0%;
+  padding-right: 3%;
+}
+.divButNo {
+  padding: 0%;
+  padding-top: 0.5%;
+  padding-right: 3%;
 }
 .yes {
-  transition-duration: 0.4s;
-}
-
-.no{
   margin: 0%;
-    margin-right: 5%;
-    padding: 4%;
-    padding-right: 0%;
-
-     
-background-color: #36393e; 
+  padding: 0%;
+  background-color: #36393e;
   border: none;
-  color: white;
-  padding: 15px;
-  text-align: center;
   text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 4px;
   cursor: pointer;
   border-radius: 50%;
-
- 
 }
 
-
-
-
+.no {
+  margin: 0%;
+  padding: 0%;
+  background-color: #36393e;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 50%;
+}
+.imgBut {
+  width: 100%;
+}
 </style>
