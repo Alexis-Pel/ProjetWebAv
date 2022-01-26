@@ -117,11 +117,9 @@ export default {
             (this.logedId = data.data._id)
           )
         );
-      console.log(this.pendingInvites);
 
       for (let index = 0; index < this.pendingInvites.length; index++) {
         const id = this.pendingInvites[index];
-        console.log(id);
         try {
           await axios
             .get(`${server.baseURL}/users/user/${id}`)
@@ -143,17 +141,34 @@ export default {
       var friendFriends = this.getFriend(idFriend);
       friendFriends.push(this.logedId);
       this.setFriend(idFriend, friendFriends);
+
       var myFriends = this.getFriend(this.logedId);
       myFriends.push(idFriend);
       this.setFriend(this.logedId, myFriends);
 */
       var index = this.pendingInvites.indexOf(idFriend);
-      //this.pendingInvites = this.pendingInvites.slice(index,1);
-      //this.pendingInfos.splice(index,1);
-      this.pendingInfos = this.pendingInfos.slice(index);
 
+      if (this.pendingInvites.length == 1) {
+        this.pendingInvites = [];
+        this.pendingInfos = [];
+      } else {
+        this.pendingInvites = this.pendingInvites.splice(index - 1, 1);
+        this.pendingInfos = this.pendingInfos.splice(index - 1, 1);
+      }
       console.log(this.pendingInvites);
-      console.log(this.pendingInfos);
+      console.log(this.logedId);
+      try {
+        await axios.put(
+          `${server.baseURL}/users/update?customerID=${this.logedId}`,
+          { pendingFriends: this.pendingInvites}
+        );
+      } catch (error) {
+        console.log(error);
+      }
+
+      //this.pendingInfos.splice(index,1);
+
+      //console.log(this.pendingInvites);
     },
 
     async setFriend(id, addFriends) {
@@ -294,7 +309,7 @@ img {
 }
 .divButYes {
   padding: 0%;
-padding-top: 0.5%;
+  padding-top: 0.5%;
   padding-bottom: 0%;
   padding-right: 3%;
 }
