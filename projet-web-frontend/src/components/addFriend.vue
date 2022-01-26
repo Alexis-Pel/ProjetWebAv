@@ -111,6 +111,9 @@ export default {
       if (user.length != 2) {
         this.errorForm();
       }
+      if(user[1] == this.loggedID){
+        this.errorForm()
+      }
       try {
         await axios
           .get(`${server.baseURL}/users/user/${user[1]}`)
@@ -120,7 +123,6 @@ export default {
       }
 
       if (this.friend === user[0]) {
-        console.log(user);
         try {
           await axios.put(
             `${server.baseURL}/users/update?customerID=${user[1]}`,

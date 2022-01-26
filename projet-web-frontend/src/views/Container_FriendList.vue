@@ -151,7 +151,7 @@
             <div class="avatar">
               <img class="avatar" :src="this.userLogged.img" />
             </div>
-            <div class="userData">
+            <div id="user" class="userData" @click="copyUser()">
               <div class="Pseudo">
                 <div class="PseudoText">{{ this.userLogged.pseudo }}</div>
               </div>
@@ -181,23 +181,59 @@
           padding-bottom: 10px;
         "
       >
-      <h3 style="display:flex;align-items:center;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;color: #fff;line-height: 18px;font-weight: 600;font-size:16px;margin-top: 14px;margin-bottom:0;border-right:1px solid #424549;padding-right:15px">Amis</h3>
+        <h3
+          style="
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            color: #fff;
+            line-height: 18px;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 14px;
+            margin-bottom: 0;
+            border-right: 1px solid #424549;
+            padding-right: 15px;
+          "
+        >
+          Amis
+        </h3>
         <a
           @click="changeComponent('listFriends')"
-          style="margin-right: 10%; margin-top: 15px; margin-bottom: 1px;color:#b9bbbe"
+          style="
+            margin-right: 10%;
+            margin-top: 15px;
+            margin-bottom: 1px;
+            color: #b9bbbe;
+          "
           class="allFriends"
         >
-          <span class="spanTous" style="padding-right:8px;padding-left:8px;cursor:pointer">Tous</span>
+          <span
+            class="spanTous"
+            style="padding-right: 8px; padding-left: 8px; cursor: pointer"
+            >Tous</span
+          >
         </a>
         <a
-          style="margin-right: 10%; margin-top: 15px; margin-bottom: 1px;color:#b9bbbe;"
+          style="
+            margin-right: 10%;
+            margin-top: 15px;
+            margin-bottom: 1px;
+            color: #b9bbbe;
+          "
           @click="changeComponent('waitingFriend')"
           class="pendingFriends"
         >
-          <span class="spanAttente" style="padding-right:8px;padding-left:8px;cursor:pointer">En attente</span>
+          <span
+            class="spanAttente"
+            style="padding-right: 8px; padding-left: 8px; cursor: pointer"
+            >En attente</span
+          >
         </a>
         <button
-          style="margin-right: 10%; margin-top: 15px; margin-bottom: 1px;"
+          style="margin-right: 10%; margin-top: 15px; margin-bottom: 1px"
           @click="changeComponent('addFriend')"
           class="addFriend"
         >
@@ -246,6 +282,10 @@ export default {
     }
   },
   methods: {
+    async copyUser() {
+      await navigator.clipboard.writeText(`${this.userLogged.pseudo}#${this.userLogged._id}`);
+      alert('Copied User!');
+    },
     changeComponent(name) {
       if (name == "addFriend") {
         this.activeComponent = addFriend;
@@ -254,11 +294,10 @@ export default {
         this.activeComponent = waitingFriend;
       }
       if (name == "listFriends") {
-        if(this.activeComponent == friendListComponent){
-            this.$root.$emit('userLogged', `${JSON.stringify(this.userLogged)}`) //EMIT THE LOGGED USER
-        }
-        else{
-            this.activeComponent = friendListComponent;
+        if (this.activeComponent == friendListComponent) {
+          this.$root.$emit("userLogged", `${JSON.stringify(this.userLogged)}`); //EMIT THE LOGGED USER
+        } else {
+          this.activeComponent = friendListComponent;
         }
       }
     },
@@ -267,11 +306,11 @@ export default {
 </script>
 
 <style scoped>
-.spanTous:hover{
+.spanTous:hover {
   color: #fff;
 }
-.spanAttente:hover{
-color: #fff;
+.spanAttente:hover {
+  color: #fff;
 }
 .buttonPM {
   cursor: pointer;
@@ -381,6 +420,7 @@ a:hover {
   flex-direction: column;
   align-items: flex-start;
   margin-left: 10px;
+  cursor: pointer;
 }
 .wrapper {
   flex: 1 1 auto;
