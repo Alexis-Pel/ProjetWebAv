@@ -254,7 +254,12 @@ export default {
         this.activeComponent = waitingFriend;
       }
       if (name == "listFriends") {
-        window.location = "/friends";
+        if(this.activeComponent == friendListComponent){
+            this.$root.$emit('userLogged', `${JSON.stringify(this.userLogged)}`) //EMIT THE LOGGED USER
+        }
+        else{
+            this.activeComponent = friendListComponent;
+        }
       }
     },
   },

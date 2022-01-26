@@ -29,36 +29,51 @@
 </template>
 
 <script>
+import { getCookie } from "../assets/js/cookies";
 import { server } from "../helper";
 import axios from "axios";
+import { decrypt } from "../assets/js/encryption";
 
 export default {
   data() {
     return {
       friendIdList: null,
       friendList: [],
+      cacheIDList: null,
     };
   },
-  created() {
-    this.$root.$on("userLogged", (text) => {
-      this.friendIdList = JSON.parse(text).friends;
+  async created() {
+    var login = getCookie("token_login");
+    login = decrypt(login);
+    try {
+      await axios
+        .get(`${server.baseURL}/users/user/${login}`)
+        .then((data) => (this.friendIdList = data.data.friends));
+    } catch (e) {
+      console.log(e);
+    }
+    if (this.cacheIDList != this.friendIdList) {
+      this.cacheIDList = this.friendIdList;
       this.getFriendsinfos();
-    });
+    }
   },
   methods: {
     async getFriendsinfos() {
+      var friends = [];
       for (let index = 0; index < this.friendIdList.length; index++) {
         const friendId = this.friendIdList[index];
         await axios
           .get(`${server.baseURL}/users/user/${friendId}`)
           .then((data) =>
-            this.friendList.push({
+            friends.push({
               id: data.data._id,
               img: data.data.img,
               username: data.data.pseudo,
             })
           );
       }
+      this.friendList = friends;
+
     },
   },
 };
