@@ -12,7 +12,7 @@
     <h5>Tous les amis - {{ friendList.length }}</h5>
       <ul>
         <div>
-          <li v-for="friend in friendList" :key="friend.id">
+          <li  v-for="friend in friendList" :key="friend.id">
             <a style="display:flex; flex-direction:column;cursor:pointer">
             <div class="card">
               <div style="display:flex;margin: 0;padding: 0;border: 0;font-weight: inherit;font-style: inherit;font-family: inherit;font-size: 100%;vertical-align: baseline;">
@@ -62,6 +62,7 @@ export default {
       var friends = [];
       for (let index = 0; index < this.friendIdList.length; index++) {
         const friendId = this.friendIdList[index];
+        if(friendId != ""){
         await axios
           .get(`${server.baseURL}/users/user/${friendId}`)
           .then((data) =>
@@ -71,6 +72,7 @@ export default {
               username: data.data.pseudo,
             })
           );
+        }
       }
       this.friendList = friends;
 
@@ -90,7 +92,7 @@ h5 {
   font-weight: 600;
   text-transform: uppercase;
   font-family: "Helvetica Neue";
-  margin: 16px 20px 8px 30px;
+  margin: 20px 20px 18px 30px;
   display: flex;
 }
 ul {

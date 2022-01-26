@@ -49,9 +49,18 @@
         justify-content: center;
       "
     >
-      <div style="display: flex; justify-content: center;flex-direction:column;align-items:center">
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+        "
+      >
         <div class="img"></div>
-        <div style="color:#72767d;font-size: 16px;line-height: 20px;">Wumpus attend des amis. Mais rien ne t'oblige à en ajouter !</div>
+        <div style="color: #72767d; font-size: 16px; line-height: 20px">
+          Wumpus attend des amis. Mais rien ne t'oblige à en ajouter !
+        </div>
       </div>
     </div>
   </div>
@@ -70,6 +79,8 @@ export default {
       loggedID: "",
       userToSearch: "",
       friend: "",
+      requestPendingFriends: null,
+      requestFriends: null
     };
   },
   async beforeMount() {
@@ -85,9 +96,10 @@ export default {
   },
   methods: {
     checkLength() {
-      document.getElementsByClassName('Success')[0].style.display = "none";
-      document.getElementsByClassName('Error')[0].styledisplay = "none";
-      document.getElementsByClassName('InputDiv')[0].style.border = "1px solid #232427";
+      document.getElementsByClassName("Success")[0].style.display = "none";
+      document.getElementsByClassName("Error")[0].style.display = "none";
+      document.getElementsByClassName("InputDiv")[0].style.border =
+        "1px solid #232427";
       if (this.userToSearch.length >= 4) {
         document.getElementById("sendInvite").disabled = false;
         document.getElementById("sendInvite").style.opacity = "1";
@@ -99,37 +111,65 @@ export default {
       }
     },
     errorForm() {
-      document.getElementsByClassName('Error')[0].style.display = "block";
-      document.getElementsByClassName('InputDiv')[0].style.border = "1px solid #ff0000";
+      document.getElementsByClassName("Error")[0].style.display = "block";
+      document.getElementsByClassName("InputDiv")[0].style.border =
+        "1px solid #ff0000";
     },
     successForm() {
-      document.getElementsByClassName('Success')[0].style.display = "block";
-      document.getElementsByClassName('InputDiv')[0].style.border = "1px solid #4fdc7c";
+      document.getElementsByClassName("Success")[0].style.display = "block";
+      document.getElementsByClassName("InputDiv")[0].style.border =
+        "1px solid #4fdc7c";
+    },
+    checkAlreadyInvited() {
+      if (this.requestPendingFriends.indexOf(this.loggedID) == -1 && this.requestFriends.indexOf(this.loggedID) == -1) {
+        return false;
+      } else {
+        return true;
+      }
     },
     async checkUser() {
       const user = this.userToSearch.split("#");
       if (user.length != 2) {
         this.errorForm();
+        return
       }
-      if(user[1] == this.loggedID){
-        this.errorForm()
-      }
-      try {
-        await axios
-          .get(`${server.baseURL}/users/user/${user[1]}`)
-          .then((data) => (this.friend = data.data.pseudo));
-      } catch (error) {
+      if (user[1] == this.loggedID) {
         this.errorForm();
+        return
       }
-
-      if (this.friend === user[0]) {
+      if (user[1] == this.loggedID) {
+        this.errorForm();
+        return
+      } else {
         try {
-          await axios.put(
-            `${server.baseURL}/users/update?customerID=${user[1]}`,
-            { pendingFriends: this.loggedID }
-          );
+          await axios
+            .get(`${server.baseURL}/users/user/${user[1]}`)
+            .then(
+              (data) => (
+                (this.friend = data.data.pseudo),
+                (this.requestPendingFriends = data.data.pendingFriends)
+                (this.requestFriends = data.data.friends)
+              )
+            );
         } catch (error) {
           this.errorForm();
+        }
+        if (this.friend === user[0]) {
+          if (this.checkAlreadyInvited() == true) {
+            this.errorForm();
+            return;
+          } else {
+            this.requestPendingFriends.push(this.loggedID);
+            try {
+              await axios.put(
+                `${server.baseURL}/users/update?customerID=${user[1]}`,
+                { pendingFriends: this.requestPendingFriends }
+              );
+              this.successForm();
+            } catch (error) {
+              this.errorForm();
+            }
+          }
         }
       }
     },

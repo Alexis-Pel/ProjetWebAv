@@ -284,7 +284,7 @@ export default {
   methods: {
     async copyUser() {
       await navigator.clipboard.writeText(`${this.userLogged.pseudo}#${this.userLogged._id}`);
-      alert('Copied User!');
+      alert('Copied!');
     },
     changeComponent(name) {
       if (name == "addFriend") {

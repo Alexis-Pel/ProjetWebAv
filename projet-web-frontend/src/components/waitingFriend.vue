@@ -124,8 +124,6 @@ export default {
           await axios
             .get(`${server.baseURL}/users/user/${id}`)
             .then((data) => this.pendingInfos.push(data.data));
-
-          console.log(this.pendingInfos);
         } catch (e) {
           console.log(e);
         }
@@ -137,17 +135,15 @@ export default {
 
   methods: {
     async acceptedFriend(idFriend) {
-      /*
-      var friendFriends = this.getFriend(idFriend);
+      var friendFriends = await this.getFriend(idFriend);
       friendFriends.push(this.logedId);
       this.setFriend(idFriend, friendFriends);
 
-      var myFriends = this.getFriend(this.logedId);
+      var myFriends = await this.getFriend(this.logedId);
       myFriends.push(idFriend);
       this.setFriend(this.logedId, myFriends);
-*/
-      var index = this.pendingInvites.indexOf(idFriend);
 
+      var index = this.pendingInvites.indexOf(idFriend);
       if (this.pendingInvites.length == 1) {
         this.pendingInvites = [];
         this.pendingInfos = [];
@@ -155,30 +151,25 @@ export default {
         this.pendingInvites = this.pendingInvites.splice(index - 1, 1);
         this.pendingInfos = this.pendingInfos.splice(index - 1, 1);
       }
-      console.log(this.pendingInvites);
-      console.log(this.logedId);
       try {
         await axios.put(
           `${server.baseURL}/users/update?customerID=${this.logedId}`,
-          { pendingFriends: this.pendingInvites}
+          { pendingFriends: this.pendingInvites }
         );
       } catch (error) {
         console.log(error);
       }
-
-      //this.pendingInfos.splice(index,1);
-
-      //console.log(this.pendingInvites);
     },
 
     async setFriend(id, addFriends) {
-      try {
-        await axios.put(`${server.baseURL}/users/update?customerID=${id}`, {
-          friends: addFriends,
-        });
-      } catch (error) {
-        console.log(error);
-      }
+        console.log(addFriends)
+        try {
+          await axios.put(`${server.baseURL}/users/update?customerID=${id}`, {
+            friends: addFriends,
+          });
+        } catch (error) {
+          console.log(error);
+        }
     },
 
     async getFriend(id) {
@@ -186,7 +177,7 @@ export default {
       try {
         await axios
           .get(`${server.baseURL}/users/user/${id}`)
-          .then((data) => (localFriend = data.data.friends));
+          .then((data) => localFriend = data.data.friends );
       } catch (error) {
         console.log(error);
       }
