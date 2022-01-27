@@ -12,7 +12,7 @@
     <h5>Tous les amis - {{ friendList.length }}</h5>
       <ul>
         <div>
-          <li v-for="friend in friendList" :key="friend.id">
+          <li @click="messageTo(friend.id, friend.groups)" v-for="friend in friendList" :key="friend.id">
             <a style="display:flex; flex-direction:column;cursor:pointer">
             <div class="card">
               <div style="display:flex;margin: 0;padding: 0;border: 0;font-weight: inherit;font-style: inherit;font-family: inherit;font-size: 100%;vertical-align: baseline;">
@@ -63,6 +63,41 @@ export default {
     this.getFriendsinfos();
   },
   methods: {
+    async messageTo(friendId, friendGroups) {
+      var createdGroup = await this.createGroup([this.idLogged, friendId]);
+
+      this.groupsList.push(createdGroup.data.messages._id);
+      friendGroups.push(createdGroup.data.messages._id);
+      this.updateGroups(this.idLogged, this.groupsList)
+      this.updateGroups(friendId, friendGroups)
+    },
+    async updateGroups(id, group) {
+      try {
+        await axios.put(
+          `${server.baseURL}/users/update?customerID=${id}`,
+          { groups: group }
+        );
+        console.log('reussis')
+        return;
+      } catch (error) {
+        console.log(error)
+        return;
+      }
+    },
+    async createGroup(ids) {
+      var createdGroup;
+      try {
+        createdGroup = await axios.post(`${server.baseURL}/messages/create`, {
+          name: "PrivateMessage",
+          attendees: ids,
+          img: null,
+          messages: [],
+        });
+        return createdGroup;
+      } catch (e) {
+        console.log(e);
+      }
+    },
     async getFriendsinfos() {
       var friends = [];
       for (let index = 0; index < this.friendIdList.length; index++) {
@@ -75,6 +110,7 @@ export default {
                 id: data.data._id,
                 img: data.data.img,
                 username: data.data.pseudo,
+                groups: data.data.groups,
               })
             );
         }
