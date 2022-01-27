@@ -251,7 +251,6 @@
 import friendListComponent from "../components/Friend_List.vue";
 import addFriend from "../components/addFriend.vue";
 import waitingFriend from "../components/waitingFriend.vue";
-import Sidebar from "../components/Sidebar.vue";
 import { getCookie } from "../assets/js/cookies";
 import { server } from "../helper";
 import axios from "axios";
@@ -268,7 +267,6 @@ export default {
     friendListComponent,
     addFriend,
     waitingFriend,
-    Sidebar,
   },
   async beforeMount() {
     var login = getCookie("token_login");
