@@ -4,7 +4,7 @@
       <img class="titleImg" :src="title.img" alt="imgConv" />
     </div>
     <div class="title">
-      <h1>{{ title.tableName }}</h1>
+      <h5>{{ info }}</h5>
     </div>
     <div class="welcome"><h6>Bienvenue au début du groupe privé</h6></div>
     <div v-for="message in messages" :key="message.id">
@@ -28,10 +28,14 @@
 </template>
 
 <script>
+import { server } from "../helper";
+import axios from "axios";
+
 export default {
   name: "chat",
   data() {
     return {
+      info: null,
       messages: [
         {
           img: "https://resize-elle.ladmedia.fr/rcrop/796,1024/img/var/plain_site/storage/images/people/la-vie-des-people/news/le-beau-gosse-de-la-semaine-du-13-11-09-est-robert-pattinson/12736805-1-fre-FR/Le-beau-gosse-de-la-semaine-du-13-11-09-est-Robert-Pattinson.jpg",
@@ -39,83 +43,6 @@ export default {
           date: "15/12/2002",
           message: "coucou cva",
           id: 0,
-        },
-        {
-          img: "https://img.lemde.fr/2013/09/13/0/0/658/368/1872/1046/30/0/ill_3477116_039b_blobfish.jpg",
-          pseudo: "test",
-          date: "15/12/2002",
-          message: "oui et toi",
-          id: 1,
-        },
-        {
-          img: "https://resize-elle.ladmedia.fr/rcrop/796,1024/img/var/plain_site/storage/images/people/la-vie-des-people/news/le-beau-gosse-de-la-semaine-du-13-11-09-est-robert-pattinson/12736805-1-fre-FR/Le-beau-gosse-de-la-semaine-du-13-11-09-est-Robert-Pattinson.jpg",
-          pseudo: "piou",
-          date: "15/12/2002",
-          message: "Non ma grand-mère est morte :'(",
-          id: 2,
-        },
-        {
-          img: "https://resize-elle.ladmedia.fr/rcrop/796,1024/img/var/plain_site/storage/images/people/la-vie-des-people/news/le-beau-gosse-de-la-semaine-du-13-11-09-est-robert-pattinson/12736805-1-fre-FR/Le-beau-gosse-de-la-semaine-du-13-11-09-est-Robert-Pattinson.jpg",
-          pseudo: "piou",
-          date: "15/12/2002",
-          message: "j'suis triste",
-          id: 3,
-        },
-        {
-          img: "https://img.lemde.fr/2013/09/13/0/0/658/368/1872/1046/30/0/ill_3477116_039b_blobfish.jpg",
-          pseudo: "test",
-          date: "15/12/2002",
-          message: "BAH MANGE TES MORTS!!!",
-          id: 4,
-        },
-        {
-          img: "https://resize-elle.ladmedia.fr/rcrop/796,1024/img/var/plain_site/storage/images/people/la-vie-des-people/news/le-beau-gosse-de-la-semaine-du-13-11-09-est-robert-pattinson/12736805-1-fre-FR/Le-beau-gosse-de-la-semaine-du-13-11-09-est-Robert-Pattinson.jpg",
-          pseudo: "piou",
-          date: "15/12/2002",
-          message: "OK bah on est plus copain",
-          id: 5,
-        },
-        {
-          img: "https://resize-elle.ladmedia.fr/rcrop/796,1024/img/var/plain_site/storage/images/people/la-vie-des-people/news/le-beau-gosse-de-la-semaine-du-13-11-09-est-robert-pattinson/12736805-1-fre-FR/Le-beau-gosse-de-la-semaine-du-13-11-09-est-Robert-Pattinson.jpg",
-          pseudo: "piou",
-          date: "15/12/2002",
-          message: "fils de pute !!!!",
-          id: 6,
-        },
-        {
-          img: "https://i1.sndcdn.com/artworks-swVOMV214dhVjCTW-Sqnx6A-t500x500.jpg",
-          pseudo: "Tristan",
-          date: "15/12/2002",
-          message: "EH! salut cva vous faite quoi ?",
-          id: 7,
-        },
-        {
-          img: "https://i1.sndcdn.com/artworks-swVOMV214dhVjCTW-Sqnx6A-t500x500.jpg",
-          pseudo: "Tristan",
-          date: "15/12/2002",
-          message: "mais euh vous voulez pas me répondre ?",
-          id: 7,
-        },
-        {
-          img: "https://i1.sndcdn.com/artworks-swVOMV214dhVjCTW-Sqnx6A-t500x500.jpg",
-          pseudo: "Tristan",
-          date: "15/12/2002",
-          message: "Bande de méchant!",
-          id: 7,
-        },
-        {
-          img: "https://i1.sndcdn.com/artworks-swVOMV214dhVjCTW-Sqnx6A-t500x500.jpg",
-          pseudo: "Tristan",
-          date: "15/12/2002",
-          message: "NneuNnei!",
-          id: 7,
-        },
-        {
-          img: "https://i1.sndcdn.com/artworks-swVOMV214dhVjCTW-Sqnx6A-t500x500.jpg",
-          pseudo: "Tristan",
-          date: "15/12/2002",
-          message: "TA GUEULE !!!",
-          id: 7,
         },
       ],
       title: {
@@ -125,6 +52,21 @@ export default {
       },
     };
   },
+  async beforeMount() {
+    let params = new URLSearchParams(window.location.search)
+    console.log(params)
+    let id = params.get("id")
+    console.log(id)
+    try {
+      await axios
+        .get(`${server.baseURL}/messages/message/${id}`)
+        .then((data) => (this.info = data.data));
+        console.log(this.info)
+    } catch (e) {
+      console.log(e);
+    }
+  },
+
 };
 </script>
 
@@ -148,10 +90,11 @@ export default {
 }
 .chat {
   display: flex;
-  height: 100%;
+  height: 122.5%;
   background-color: rgb(54, 57, 63);
   justify-content: flex-start;
   flex-direction: column;
+  overflow: visible;
 }
 .message {
   color: #dcddde;
@@ -215,13 +158,9 @@ div.img {
   overflow: hidden;
   
 }
-
 html,
-body {
+body{
   background-color: rgb(54, 57, 63);
   height: 122.5%;
-  overflow: visible;
 }
-/* izhdbzzb */
-
 </style>

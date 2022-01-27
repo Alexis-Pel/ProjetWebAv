@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import HomeComponent from '@/views/Home';
 import CreationComponent from '@/views/Register'
 import FriendList from '@/views/Container_FriendList'
+import ChatComponent from '@/components/Chat'
 
 Vue.use(Router)
 
@@ -13,5 +14,6 @@ export default new Router({
     { path: '/login', name: 'login', component: HomeComponent },
     { path: '/register', name: 'register', component: CreationComponent},
     { path: '/friends', name: 'friends', component: FriendList},
+    { path: '/chat', name: 'chat', component: ChatComponent},
   ]
 });

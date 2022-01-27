@@ -304,7 +304,7 @@ h6 {
   font-family: "Helvetica Neue", serif;
 }
 </style>
-<style>
+<style scoped>
 body {
   background-image: url("../assets/background_login.jpeg");
 }
