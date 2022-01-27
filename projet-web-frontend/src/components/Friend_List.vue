@@ -42,6 +42,7 @@ export default {
       cacheIDList: null,
       groupsList: null,
       idLogged: null,
+      loggedimg: null
     };
   },
   async created() {
@@ -54,7 +55,8 @@ export default {
           (data) => (
             (this.friendIdList = data.data.friends),
             (this.groupsList = data.data.groups),
-            (this.idLogged = data.data._id)
+            (this.idLogged = data.data._id),
+            (this.loggedimg = data.data.img)
           )
         );
     } catch (e) {
@@ -78,6 +80,7 @@ export default {
           { groups: group }
         );
         console.log('reussis')
+        window.location = ('/friends')
         return;
       } catch (error) {
         console.log(error)
@@ -90,7 +93,7 @@ export default {
         createdGroup = await axios.post(`${server.baseURL}/messages/create`, {
           name: "PrivateMessage",
           attendees: ids,
-          img: null,
+          img: this.loggedimg,
           messages: [],
         });
         return createdGroup;
