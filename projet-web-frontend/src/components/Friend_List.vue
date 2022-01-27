@@ -52,10 +52,7 @@ export default {
     } catch (e) {
       console.log(e);
     }
-    if (this.cacheIDList != this.friendIdList) {
-      this.cacheIDList = this.friendIdList;
-      this.getFriendsinfos();
-    }
+    this.getFriendsinfos()
   },
   methods: {
     async getFriendsinfos() {
@@ -75,7 +72,6 @@ export default {
         }
       }
       this.friendList = friends;
-
     },
   },
 };

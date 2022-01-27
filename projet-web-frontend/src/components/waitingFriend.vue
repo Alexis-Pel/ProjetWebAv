@@ -135,14 +135,6 @@ export default {
 
   methods: {
     async acceptedFriend(idFriend) {
-      var friendFriends = await this.getFriend(idFriend);
-      friendFriends.push(this.logedId);
-      this.setFriend(idFriend, friendFriends);
-
-      var myFriends = await this.getFriend(this.logedId);
-      myFriends.push(idFriend);
-      this.setFriend(this.logedId, myFriends);
-
       var index = this.pendingInvites.indexOf(idFriend);
       if (this.pendingInvites.length == 1) {
         this.pendingInvites = [];
@@ -151,16 +143,33 @@ export default {
         this.pendingInvites = this.pendingInvites.splice(index - 1, 1);
         this.pendingInfos = this.pendingInfos.splice(index - 1, 1);
       }
+      try {
+        await axios.put(
+          `${server.baseURL}/users/update?customerID=${this.logedId}`,
+          {
+            pendingFriends: this.pendingInvites,
+          }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+      var friendFriends = await this.getFriend(idFriend);
+      friendFriends.push(this.logedId);
+      this.setFriend(idFriend, friendFriends);
+
+      var myFriends = await this.getFriend(this.logedId);
+      myFriends.push(idFriend);
+      this.setFriend(this.logedId, myFriends);
     },
 
     async setFriend(id, addFriends) {
-        try {
-          await axios.put(`${server.baseURL}/users/update?customerID=${id}`, {
-            friends: addFriends,
-          });
-        } catch (error) {
-          console.log(error);
-        }
+      try {
+        await axios.put(`${server.baseURL}/users/update?customerID=${id}`, {
+          friends: addFriends,
+        });
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     async getFriend(id) {
@@ -168,7 +177,7 @@ export default {
       try {
         await axios
           .get(`${server.baseURL}/users/user/${id}`)
-          .then((data) => localFriend = data.data.friends );
+          .then((data) => (localFriend = data.data.friends));
       } catch (error) {
         console.log(error);
       }
