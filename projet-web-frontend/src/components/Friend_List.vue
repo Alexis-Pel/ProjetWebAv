@@ -16,7 +16,7 @@
             <a style="display:flex; flex-direction:column;cursor:pointer">
             <div class="card">
               <div style="display:flex;margin: 0;padding: 0;border: 0;font-weight: inherit;font-style: inherit;font-family: inherit;font-size: 100%;vertical-align: baseline;">
-                <svg width="40" height="32" viewBox="0 0 40 32"><foreignObject x="0" y="0" width="32" height="32"><div style="width: 100%;height: 100%;"><img :src="friend.img" alt=" " aria-hidden="true"></div></foreignObject></svg>
+                <svg width="40" height="32" viewBox="0 0 40 32"><foreignObject x="0" y="0" width="32" height="32"><div style="width: 100%;height: 100%;"><img :src="friend.img" aria-hidden="true"></div></foreignObject></svg>
                 <span style="margin-top:5px" class="username">{{ friend.username }}</span>
               </div>
             </div>
@@ -147,7 +147,6 @@ img {
   width: 100%;
   height: 100%;
   margin: 0 12px 0 0;
-  flex-shrink: 0;
   position: relative;
   border-radius: 50%;
 }
