@@ -12,7 +12,7 @@
     <h5>Tous les amis - {{ friendList.length }}</h5>
       <ul>
         <div>
-          <li  v-for="friend in friendList" :key="friend.id">
+          <li v-for="friend in friendList" :key="friend.id">
             <a style="display:flex; flex-direction:column;cursor:pointer">
             <div class="card">
               <div style="display:flex;margin: 0;padding: 0;border: 0;font-weight: inherit;font-style: inherit;font-family: inherit;font-size: 100%;vertical-align: baseline;">
@@ -40,6 +40,8 @@ export default {
       friendIdList: null,
       friendList: [],
       cacheIDList: null,
+      groupsList: null,
+      idLogged: null,
     };
   },
   async created() {
@@ -48,27 +50,33 @@ export default {
     try {
       await axios
         .get(`${server.baseURL}/users/user/${login}`)
-        .then((data) => (this.friendIdList = data.data.friends));
+        .then(
+          (data) => (
+            (this.friendIdList = data.data.friends),
+            (this.groupsList = data.data.groups),
+            (this.idLogged = data.data._id)
+          )
+        );
     } catch (e) {
       console.log(e);
     }
-    this.getFriendsinfos()
+    this.getFriendsinfos();
   },
   methods: {
     async getFriendsinfos() {
       var friends = [];
       for (let index = 0; index < this.friendIdList.length; index++) {
         const friendId = this.friendIdList[index];
-        if(friendId != ""){
-        await axios
-          .get(`${server.baseURL}/users/user/${friendId}`)
-          .then((data) =>
-            friends.push({
-              id: data.data._id,
-              img: data.data.img,
-              username: data.data.pseudo,
-            })
-          );
+        if (friendId != "") {
+          await axios
+            .get(`${server.baseURL}/users/user/${friendId}`)
+            .then((data) =>
+              friends.push({
+                id: data.data._id,
+                img: data.data.img,
+                username: data.data.pseudo,
+              })
+            );
         }
       }
       this.friendList = friends;

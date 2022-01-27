@@ -313,7 +313,6 @@ export default {
           console.log(e);
         }
       }
-      console.log(this.groups);
     },
     changeComponent(name) {
       if (name == "addFriend") {
