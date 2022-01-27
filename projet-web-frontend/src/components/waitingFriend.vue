@@ -2,9 +2,12 @@
   <div class="main-container">
     <header>
       <div v-if="pendingInfos.length == 0" class="pasDamis">
-        <h2>En attente d'amis</h2>
-        <div class="sous-titre">
-          Il n'y a aucune demande d'ami en attente. Essaye de manger des curlys!
+       
+        <div class="bel-Ami">
+          <img src="@/assets/wumpus.png" class="imgWumpus">
+        </div>
+        <div class="sous-Ami">
+          Il n'y a aucune demande d'ami en attente. Tiens, voilà Wumpus en attandant.
         </div>
       </div>
       <div class="wrapper" v-else>
@@ -71,7 +74,7 @@
                     </button>
                   </div>
                   <div class="divButNo">
-                    <button class="no">
+                    <button class="no" @click="refusedFriend(friend._id)">
                       <img
                         class="imgBut"
                         src="@/assets/croix.png"
@@ -99,9 +102,9 @@ import { decrypt } from "../assets/js/encryption";
 export default {
   data() {
     return {
-      pendingInvites: [],
-      pendingInfos: [],
-      logedId: null,
+      pendingInvites: [], //id dans pendingFriends
+      pendingInfos: [], //info des personnes qui demande en ami
+      logedId: null, //mon id
     };
   },
 
@@ -113,8 +116,8 @@ export default {
         .get(`${server.baseURL}/users/user/${login}`)
         .then(
           (data) => (
-            (this.pendingInvites = data.data.pendingFriends),
-            (this.logedId = data.data._id)
+            (this.pendingInvites = data.data.pendingFriends), //récupération des id dans pendingFriends
+            (this.logedId = data.data._id) //récupération de mon id
           )
         );
 
@@ -123,7 +126,7 @@ export default {
         try {
           await axios
             .get(`${server.baseURL}/users/user/${id}`)
-            .then((data) => this.pendingInfos.push(data.data));
+            .then((data) => this.pendingInfos.push(data.data))//on récupère les infos des personnes qui demande en ami qu'on met dans pendingInfos
         } catch (e) {
           console.log(e);
         }
@@ -135,7 +138,15 @@ export default {
 
   methods: {
     async acceptedFriend(idFriend) {
-      var index = this.pendingInvites.indexOf(idFriend);
+      var friendFriends = await this.getFriend(idFriend); //on récupère les infos de la personne qui demande en ami qu'on met dans friendFriends
+      friendFriends.push(this.logedId); //on rajoute notre id dans le tableau d'ami de notre ami
+      this.setFriend(idFriend, friendFriends); //on met à jour la bdd
+
+      var myFriends = await this.getFriend(this.logedId);//on récupère les infos de la personne qui reçoit la demande qu'on met dans myFriends
+      myFriends.push(idFriend); //on rajoute notre l'id de notre ami dans le tableau de la personne qui reçoit la demande
+      this.setFriend(this.logedId, myFriends); //on met à jour la bdd
+
+      var index = this.pendingInvites.indexOf(idFriend); //on mes à jour nos tableaus en local
       if (this.pendingInvites.length == 1) {
         this.pendingInvites = [];
         this.pendingInfos = [];
@@ -144,45 +155,61 @@ export default {
         this.pendingInfos = this.pendingInfos.splice(index - 1, 1);
       }
       try {
-        await axios.put(
-          `${server.baseURL}/users/update?customerID=${this.logedId}`,
-          {
-            pendingFriends: this.pendingInvites,
-          }
-        );
-      } catch (error) {
-        console.log(error);
-      }
-      var friendFriends = await this.getFriend(idFriend);
-      friendFriends.push(this.logedId);
-      this.setFriend(idFriend, friendFriends);
-
-      var myFriends = await this.getFriend(this.logedId);
-      myFriends.push(idFriend);
-      this.setFriend(this.logedId, myFriends);
+          await axios.put(
+            `${server.baseURL}/users/update?customerID=${this.logedId}`, { //on met à jour les demandes d'amis de la personne dans la bdd 
+            pendingFriends: this.pendingInvites, 
+          });
+        } catch (error) {
+          console.log(error);
+        }
     },
 
-    async setFriend(id, addFriends) {
+    async refusedFriend(idFriend){
+
+      var index = this.pendingInvites.indexOf(idFriend); //on mes à jour nos tableaus en local
+      if (this.pendingInvites.length == 1) {
+        this.pendingInvites = [];
+        this.pendingInfos = [];
+      } else {
+        this.pendingInvites = this.pendingInvites.splice(index - 1, 1);
+        this.pendingInfos = this.pendingInfos.splice(index - 1, 1);
+      }
       try {
-        await axios.put(`${server.baseURL}/users/update?customerID=${id}`, {
-          friends: addFriends,
-        });
-      } catch (error) {
-        console.log(error);
-      }
+          await axios.put(
+            `${server.baseURL}/users/update?customerID=${this.logedId}`, { //on met à jour les demandes d'amis de la personne dans la bdd 
+            pendingFriends: this.pendingInvites, 
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      
     },
 
-    async getFriend(id) {
+    async setFriend(id, addFriends) { //on met à jour les amis de la personne dans la bdd 
+        try {
+          await axios.put(
+            `${server.baseURL}/users/update?customerID=${id}`, {
+            friends: addFriends, 
+          });
+        } catch (error) {
+          console.log(error);
+        }
+    },
+
+    async getFriend(id) { //on récupère les infos du tableau friends d'une personne gràce à son id de la bdd
       var localFriend;
       try {
         await axios
-          .get(`${server.baseURL}/users/user/${id}`)
-          .then((data) => (localFriend = data.data.friends));
+          .get(`${server.baseURL}/users/user/${id}`) 
+          .then((data) => localFriend = data.data.friends );
       } catch (error) {
         console.log(error);
       }
       return localFriend;
     },
+
+    
+
   },
 };
 </script>
@@ -191,28 +218,7 @@ export default {
 
 
 <style scoped>
-h2 {
-  margin-bottom: 8px;
-  color: #fff;
-  font-size: 16px;
-  line-height: 20px;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-.sous-titre {
-  color: white;
-  color: #b9bbbe;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 400;
-}
-header {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  height: fit-content;
-  width: 100%;
-}
+
 .main-container {
   width: 100%;
   height: 100%;
@@ -231,11 +237,41 @@ header {
   background-color: #36393e;
   color: yellow;
 }
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: fit-content;
+  width: 100%;
+}
+
 .pasDamis {
-  padding-bottom: 20px;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-top: 20px;
+  margin: 0%;
+  padding: 0%;
+  padding-top: 9%;
+  padding-left: 10%;
+  padding-right: 10%;
+
+}
+.bel-Ami{
+  width: 100%;
+  padding: 0%;
+  margin: 0%;
+
+}
+.sous-Ami {
+  padding: 0%;
+  padding-top: 5%;
+  padding-left: 10%;
+  padding-right: 10%;
+  color: white;
+  color: #b9bbbe8a;
+  font-size: 17px;
+  line-height: 20px;
+  font-weight: 400;
+}
+.imgWumpus{
+  width: 75%;
 }
 .wrapper {
   width: 100%;
@@ -273,11 +309,7 @@ h3 {
   display: flex;
   width: 45%;
 }
-img {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-}
+
 .pseudo-text {
   display: flex;
   flex-direction: column;
@@ -330,5 +362,8 @@ img {
 }
 .imgBut {
   width: 100%;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
 }
 </style>
