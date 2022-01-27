@@ -144,6 +144,15 @@
                 </svg>
               </div>
             </h2>
+            <li
+              style="margin-top:10px;display: flex; flex-direction: column;align-items:center"
+              v-for="group in groups"
+              :key="group.id"
+            ><div class="groupWrapper">
+              <img class="groupAvatar" :src="group.img" />
+              <p style="font-weight:500;font-family: 'Helvetica Neue';font-size: 18px;line-height: 25px;white-space: nowrap;color: #8e9297;text-align: left;width: 100%;">{{ group.name }}</p>
+              </div>
+            </li>
           </div>
         </nav>
         <section>
@@ -261,6 +270,7 @@ export default {
     return {
       activeComponent: friendListComponent,
       userLogged: {},
+      groups: [],
     };
   },
   components: {
@@ -274,15 +284,36 @@ export default {
     try {
       await axios
         .get(`${server.baseURL}/users/user/${login}`)
-        .then((data) => (this.userLogged = data.data));
+        .then((data) => ((this.userLogged = data.data), this.getGroupsInfos()));
     } catch (e) {
       console.log(e);
     }
   },
   methods: {
     async copyUser() {
-      await navigator.clipboard.writeText(`${this.userLogged.pseudo}#${this.userLogged._id}`);
-      alert('Copied!');
+      await navigator.clipboard.writeText(
+        `${this.userLogged.pseudo}#${this.userLogged._id}`
+      );
+      alert("Copied!");
+    },
+    async getGroupsInfos() {
+      for (let index = 0; index < this.userLogged.groups.length; index++) {
+        const groupID = this.userLogged.groups[index];
+        try {
+          await axios
+            .get(`${server.baseURL}/messages/message/${groupID}`)
+            .then((data) =>
+              this.groups.push({
+                img: data.data.img,
+                name: data.data.name,
+                id: data.data._id,
+              })
+            );
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      console.log(this.groups);
     },
     changeComponent(name) {
       if (name == "addFriend") {
@@ -304,6 +335,27 @@ export default {
 </script>
 
 <style scoped>
+.groupWrapper:hover{
+  background-color: #3a3d43;
+}
+.groupWrapper{
+  display:flex;
+  width:90%;
+  margin-bottom:3%;
+  padding-top:8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.groupAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  vertical-align: middle;
+  border-style: none;
+  box-sizing: border-box;
+  margin-left: 6%;
+  margin-right: 9%;
+}
 .spanTous:hover {
   color: #fff;
 }

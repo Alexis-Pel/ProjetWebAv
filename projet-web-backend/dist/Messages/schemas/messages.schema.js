@@ -6,5 +6,6 @@ exports.MessagesSchema = new mongoose.Schema({
     messages: Array,
     name: String,
     attendees: Array,
+    img: String
 });
 //# sourceMappingURL=messages.schema.js.map
