@@ -111,11 +111,13 @@ export default {
       }
     },
     errorForm() {
+      document.getElementsByClassName("Success")[0].style.display = "none";
       document.getElementsByClassName("Error")[0].style.display = "block";
       document.getElementsByClassName("InputDiv")[0].style.border =
         "1px solid #ff0000";
     },
     successForm() {
+      document.getElementsByClassName("Error")[0].style.display = "none";
       document.getElementsByClassName("Success")[0].style.display = "block";
       document.getElementsByClassName("InputDiv")[0].style.border =
         "1px solid #4fdc7c";
@@ -131,32 +133,37 @@ export default {
       const user = this.userToSearch.split("#");
       if (user.length != 2) {
         this.errorForm();
+        console.log("Erreur")
         return
       }
       if (user[1] == this.loggedID) {
         this.errorForm();
+        console.log("Erreur 2")
         return
       }
       if (user[1] == this.loggedID) {
         this.errorForm();
+        console.log("Erreur 3")
         return
       } else {
         try {
           await axios
             .get(`${server.baseURL}/users/user/${user[1]}`)
             .then(
-              (data) => (
-                (this.friend = data.data.pseudo),
-                (this.requestPendingFriends = data.data.pendingFriends)
-                (this.requestFriends = data.data.friends)
+              (data) => (this.friend = data.data.pseudo,
+              this.requestFriends = data.data.friends,
+              this.requestPendingFriends = data.data.pendingFriends
               )
             );
         } catch (error) {
           this.errorForm();
+          console.log(error)
+          return
         }
         if (this.friend === user[0]) {
           if (this.checkAlreadyInvited() == true) {
             this.errorForm();
+            console.log("Erreur 5")
             return;
           } else {
             this.requestPendingFriends.push(this.loggedID);
@@ -166,8 +173,12 @@ export default {
                 { pendingFriends: this.requestPendingFriends }
               );
               this.successForm();
+              console.log("Success")
+              return
             } catch (error) {
               this.errorForm();
+              console.log("Erreur 6")
+              return
             }
           }
         }
