@@ -151,18 +151,9 @@ export default {
         this.pendingInvites = this.pendingInvites.splice(index - 1, 1);
         this.pendingInfos = this.pendingInfos.splice(index - 1, 1);
       }
-      try {
-        await axios.put(
-          `${server.baseURL}/users/update?customerID=${this.logedId}`,
-          { pendingFriends: this.pendingInvites }
-        );
-      } catch (error) {
-        console.log(error);
-      }
     },
 
     async setFriend(id, addFriends) {
-        console.log(addFriends)
         try {
           await axios.put(`${server.baseURL}/users/update?customerID=${id}`, {
             friends: addFriends,

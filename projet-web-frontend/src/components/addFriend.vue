@@ -133,17 +133,14 @@ export default {
       const user = this.userToSearch.split("#");
       if (user.length != 2) {
         this.errorForm();
-        console.log("Erreur")
         return
       }
       if (user[1] == this.loggedID) {
         this.errorForm();
-        console.log("Erreur 2")
         return
       }
       if (user[1] == this.loggedID) {
         this.errorForm();
-        console.log("Erreur 3")
         return
       } else {
         try {
@@ -157,13 +154,11 @@ export default {
             );
         } catch (error) {
           this.errorForm();
-          console.log(error)
           return
         }
         if (this.friend === user[0]) {
           if (this.checkAlreadyInvited() == true) {
             this.errorForm();
-            console.log("Erreur 5")
             return;
           } else {
             this.requestPendingFriends.push(this.loggedID);
@@ -173,11 +168,9 @@ export default {
                 { pendingFriends: this.requestPendingFriends }
               );
               this.successForm();
-              console.log("Success")
               return
             } catch (error) {
               this.errorForm();
-              console.log("Erreur 6")
               return
             }
           }
