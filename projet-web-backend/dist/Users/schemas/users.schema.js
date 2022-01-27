@@ -11,5 +11,6 @@ exports.UsersSchema = new mongoose.Schema({
     friends: Array,
     created_at: { type: Date, default: Date.now },
     pendingFriends: Array,
+    groups: Array,
 });
 //# sourceMappingURL=users.schema.js.map

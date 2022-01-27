@@ -7,4 +7,5 @@ export declare class CreateUsersDTO {
     readonly friends: Array<String>;
     readonly created_at: Date;
     readonly pendingFriends: Array<String>;
+    readonly groups: Array<String>;
 }
