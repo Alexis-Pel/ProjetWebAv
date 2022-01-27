@@ -233,6 +233,7 @@ export default {
   justify-content: center;
   position: absolute;
   align-items: center;
+    background-image: url("../assets/background_login.jpeg");
 }
 
 .wrapper_box {
@@ -302,16 +303,5 @@ h2,
 p,
 h6 {
   font-family: "Helvetica Neue", serif;
-}
-</style>
-<style scoped>
-body {
-  background-image: url("../assets/background_login.jpeg");
-}
-html,
-body {
-  margin: 0;
-  height: 100%;
-  overflow: hidden;
 }
 </style>

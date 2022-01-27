@@ -443,6 +443,7 @@ export default {
   justify-content: center;
   position: absolute;
   align-items: center;
+    background-image: url("../assets/background_login.jpeg");
 }
 
 .wrapperBox {
