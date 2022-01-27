@@ -365,8 +365,10 @@ export default {
         email: email,
         hashPassword: password,
         img: null,
-        friends: null,
+        friends: [],
         description: "",
+        pendingFriends:[],
+        groups:[]
       });
       router.push({ name: "login" });
     },
