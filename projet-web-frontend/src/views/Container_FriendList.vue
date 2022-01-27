@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; height: 100%">
+  <div style="display: flex; height: 100%; overflow:hidden">
     <div style="display: flex; width: 28%">
       <div style="background-color: #1f2225; height: 100%; width: 23%"></div>
       <div style="width: 77%; height: 100%; background-color: #2e3136">
@@ -250,7 +250,7 @@
         </button>
       </div>
       <div style="width: 100%; display: flex; height: 100%">
-        <component :is="activeComponent"></component>
+        <component style="height: 48.4em" :is="activeComponent"></component>
       </div>
     </div>
   </div>
@@ -483,7 +483,7 @@ a:hover {
 .User {
   display: flex;
   background-color: #282b2f;
-  height: 52px;
+  height: 50px;
   font-size: 14px;
   font-weight: 500;
   align-items: center;

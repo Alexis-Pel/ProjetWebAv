@@ -70,7 +70,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .titleImg {
   width: 80px;
   height: 80px;
@@ -90,7 +90,7 @@ export default {
 }
 .chat {
   display: flex;
-  height: 122.5%;
+  height: 50em;
   background-color: rgb(54, 57, 63);
   justify-content: flex-start;
   flex-direction: column;
@@ -158,9 +158,5 @@ div.img {
   overflow: hidden;
   
 }
-html,
-body{
-  background-color: rgb(54, 57, 63);
-  height: 122.5%;
-}
+
 </style>
