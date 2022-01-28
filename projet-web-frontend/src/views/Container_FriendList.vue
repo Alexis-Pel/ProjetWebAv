@@ -1,7 +1,9 @@
 <template>
   <div style="display: flex; height: 100%; overflow:hidden">
     <div style="display: flex; width: 28%">
-      <div style="background-color: #1f2225; height: 100%; width: 23%"></div>
+      <div style="background-color: #1f2225; height: 100%; width: 23%">
+
+      </div>
       <div style="width: 77%; height: 100%; background-color: #2e3136">
         <nav style="height: 94%">
           <div
@@ -116,7 +118,7 @@
               <span class="spanPM" style="width: 100%; text-align: left"
                 >Messages Privés</span
               >
-              <div class="buttonPM" role="button">
+              <div @click="friendsChoice()" class="buttonPM" role="button">
                 <svg
                   style="
                     flex: 0;
@@ -290,6 +292,9 @@ export default {
     }
   },
   methods: {
+    friendsChoice(){
+      router.push('/group')
+    },
     goToGroup(groupId){
       groupId = encrypt(groupId)
       router.push({ path: '/chat', query: { search: groupId } })
@@ -390,6 +395,9 @@ export default {
   letter-spacing: 0.25px;
   font-family: "Helvetica Neue";
   justify-content: space-between;
+}
+#friendChoice{
+  background-color:white; height:200px; width:200px;display: none;z-index:100
 }
 .addFriend {
   background-color: hsl(139, calc(var(--saturation-factor, 1) * 47.3%), 43.9%);
