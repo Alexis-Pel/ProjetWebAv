@@ -56,7 +56,7 @@
               <div class="request">
                 <div class="left-box">
                   <div class="img">
-                    <img :src="friend.img" />
+                    <img class="logoImg" :src="friend.img" />
                   </div>
                   <div class="pseudo-text">
                     <div class="pseudo">{{ friend.pseudo }}</div>
@@ -310,6 +310,11 @@ h3 {
 .left-box {
   display: flex;
   width: 45%;
+}
+.logoImg{
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
 }
 
 .pseudo-text {
