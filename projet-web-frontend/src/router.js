@@ -5,6 +5,7 @@ import CreationComponent from '@/views/Register'
 import FriendList from '@/views/Container_FriendList'
 import Settings from '@/views/Settings'
 import ChatComponent from '@/components/Chat'
+import SettingsMessages from '@/views/SettingsMessages'
 
 Vue.use(Router)
 
@@ -17,5 +18,7 @@ export default new Router({
     { path: '/friends', name: 'friends', component: FriendList},
     { path: '/settings', name: 'settings', component: Settings},
     { path: '/chat', name: 'chat', component: ChatComponent},
+    { path: '/settingsMessages', name: 'settingsMessages', component: SettingsMessages},
+
   ]
 });

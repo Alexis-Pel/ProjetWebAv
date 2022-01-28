@@ -158,7 +158,7 @@
         <section>
           <div class="User">
             <div class="avatar">
-              <img class="avatar" :src="this.userLogged.img" />
+              <img class="avatar" :src="this.userLogged.img" @click="settingsRouter()"/>
             </div>
             <div id="user" class="userData" @click="copyUser()">
               <div class="Pseudo">
@@ -317,6 +317,9 @@ export default {
           console.log(e);
         }
       }
+    },
+    settingsRouter(){
+      router.push({ path: '/settings',})
     },
     changeComponent(name) {
       if (name == "addFriend") {

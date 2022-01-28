@@ -2,15 +2,15 @@
   <div class="main-wrapper">
     <div class="settings">
       <div class="before">
-        <h1 style="color: white">{{ inputPseudo }}</h1>
+        <h1 style="color: white">{{ inputName }}</h1>
       </div>
       <div class="after">
         <div class="pseudo">
           <input
             class="input"
             type="text"
-            placeholder="nouveaux pseudo"
-            v-model="inputPseudo"
+            placeholder="nouveaux name"
+            v-model="inputName"
           />
         </div>
         <div style="display: flex; justify-content: space-evenly">
@@ -23,14 +23,13 @@
           />
         </div>
       </div>
-      <button v-on:click="submit(inputPseudo, inputImg)" @click="routers()">sauvegarder et quitter</button>
+      <button v-on:click="submit(inputName, inputImg)" @click="routers()">sauvegarder et quitter</button>
     </div>
   </div>
 </template>
 
 <script>
 import router from '../router'
-import { getCookie } from "../assets/js/cookies";
 import { server } from "../helper";
 import axios from "axios";
 import { decrypt } from "../assets/js/encryption";
@@ -39,21 +38,23 @@ export default {
   components: {},
   data() {
     return {
-      userLogged: {}, //data of the logged user
-      inputPseudo: null,
+      messagesLogged: {}, //data of the logged user
+      inputName: null,
       inputImg: null,
+      discussionId: "",
     };
   },
   async beforeMount() {
-    let login = getCookie("token_login");
-    login = decrypt(login);
+    let params = this.$route.query.search;
+    let id = decrypt(params);
+
     try {
       await axios
-        .get(`${server.baseURL}/users/user/${login}`)
+        .get(`${server.baseURL}/messages/message/${id}`)
         .then(
           (data) => (
-            (this.userLogged = data.data),
-            (this.inputPseudo = data.data.pseudo),
+            (this.messagesLogged = data.data),
+            (this.inputName = data.data.name),
             (this.inputImg = data.data.img)
           )
         );
@@ -62,14 +63,11 @@ export default {
     }
   },
   methods: {
-    async submit(inputPseudo, inputImg) {
+    async submit(inputName, inputImg) {
       try {
         await axios.put(
-          `${server.baseURL}/users/update?customerID=${this.userLogged._id}`,
-          {
-            pseudo: inputPseudo,
-            img: inputImg,
-          }
+          `${server.baseURL}/messages/update?messagesID=${this.messagesLogged._id}`,
+          {name: inputName,img: inputImg}
         );
       } catch (error) {
         console.log(error);
