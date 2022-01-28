@@ -1,16 +1,30 @@
 <template>
   <div class="main-wrapper">
-      <div class="settings">
-        <div pseudo>
-          <h1>{{ inputPseudo }}</h1>
-          <input class="input" type="text" placeholder="nouveaux pseudo" v-model="inputPseudo">
+    <div class="settings">
+      <div class="before">
+        <h1 style="color: white">{{ inputPseudo }}</h1>
+      </div>
+      <div class="after">
+        <div class="pseudo">
+          <input
+            class="input"
+            type="text"
+            placeholder="nouveaux pseudo"
+            v-model="inputPseudo"
+          />
         </div>
         <div>
-          <img :src="inputImg" >
-          <input class="input" type="text" placeholder="nouvelle image" v-model="inputImg">
+          <img :src="inputImg" />
+          <input
+            class="input"
+            type="text"
+            placeholder="nouvelle image"
+            v-model="inputImg"
+          />
         </div>
-        <button v-on:click="submit(inputPseudo, inputImg)">sauvegarder</button>
       </div>
+      <button v-on:click="submit(inputPseudo, inputImg)">sauvegarder</button>
+    </div>
   </div>
 </template>
 
@@ -22,7 +36,7 @@ import { decrypt } from "../assets/js/encryption";
 
 export default {
   components: {},
-data() {
+  data() {
     return {
       userLogged: {}, //data of the logged user
       inputPseudo: null,
@@ -30,17 +44,23 @@ data() {
     };
   },
   async beforeMount() {
-      let login = getCookie('token_login');
-      login = decrypt(login);
-      try {
-        await axios
-          .get(`${server.baseURL}/users/user/${login}`)
-          .then((data) => (this.userLogged = data.data, this.inputPseudo = data.data.pseudo, this.inputImg = data.data.img));
-      } catch (e) {
-          console.log(e)
-      }
+    let login = getCookie("token_login");
+    login = decrypt(login);
+    try {
+      await axios
+        .get(`${server.baseURL}/users/user/${login}`)
+        .then(
+          (data) => (
+            (this.userLogged = data.data),
+            (this.inputPseudo = data.data.pseudo),
+            (this.inputImg = data.data.img)
+          )
+        );
+    } catch (e) {
+      console.log(e);
+    }
   },
-  methods:{
+  methods: {
     async submit(inputPseudo, inputImg) {
       try {
         await axios.put(
@@ -54,10 +74,33 @@ data() {
         console.log(error);
       }
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-
+.main-wrapper {
+  display: flex;
+  justify-content: center;
+  height: 800px;
+  align-items: center;
+}
+.after {
+  display: flex;
+  height: 50%;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.input {
+  margin-bottom: 10px;
+  background-color: #303338;
+  border: none;
+  border-radius: 5px;
+  color: darkgray;
+}
+.settings {
+  background-color: #40444b;
+  height: 300px;
+  width: 700px;
+}
 </style>

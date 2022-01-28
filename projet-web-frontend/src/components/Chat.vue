@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div style="display:flex;" class="retour">
+      <button @click="backToFriends()" style='margin-left:10px; margin-top:10px;background-color:rgba(255, 255, 255, 0.192);color:white;border:none;border-radius:5px' type="button">Retour</button>
+    </div>
     <div class="chat">
       <div class="intro">
         <div class="titleImg">
@@ -91,6 +94,9 @@ export default {
     );
   },
   methods: {
+    backToFriends(){
+      window.location = '/friends'
+    },
     async submit(input) {
       if (input.length > 0) {
         let newMessage = {
