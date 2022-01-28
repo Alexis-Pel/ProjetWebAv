@@ -96,6 +96,7 @@ export default {
         let newMessage = {
           pseudo: this.userLogged.pseudo,
           id: this.infos.messages.length,
+          img: this.userLogged.img,
           message: input,
         };
         this.infos.messages.push(newMessage);
