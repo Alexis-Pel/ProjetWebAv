@@ -30,6 +30,7 @@
 <script>
 import { server } from "../helper";
 import axios from "axios";
+import { decrypt } from "../assets/js/encryption";
 
 export default {
   name: "chat",
@@ -53,10 +54,9 @@ export default {
     };
   },
   async beforeMount() {
-    let params = new URLSearchParams(window.location.search)
-    console.log(params)
-    let id = params.get("id")
-    console.log(id)
+    let params = this.$route.query.search
+    let id = decrypt(params)
+
     try {
       await axios
         .get(`${server.baseURL}/messages/message/${id}`)
@@ -70,7 +70,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .titleImg {
   width: 80px;
   height: 80px;
@@ -90,7 +90,7 @@ export default {
 }
 .chat {
   display: flex;
-  height: 122.5%;
+  height: 50em;
   background-color: rgb(54, 57, 63);
   justify-content: flex-start;
   flex-direction: column;
@@ -158,9 +158,5 @@ div.img {
   overflow: hidden;
   
 }
-html,
-body{
-  background-color: rgb(54, 57, 63);
-  height: 122.5%;
-}
+
 </style>

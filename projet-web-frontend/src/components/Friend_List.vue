@@ -12,7 +12,7 @@
     <h5>Tous les amis - {{ friendList.length }}</h5>
       <ul>
         <div>
-          <li  v-for="friend in friendList" :key="friend.id">
+          <li @click="messageTo(friend.id, friend.groups)" v-for="friend in friendList" :key="friend.id">
             <a style="display:flex; flex-direction:column;cursor:pointer">
             <div class="card">
               <div style="display:flex;margin: 0;padding: 0;border: 0;font-weight: inherit;font-style: inherit;font-family: inherit;font-size: 100%;vertical-align: baseline;">
@@ -32,7 +32,8 @@
 import { getCookie } from "../assets/js/cookies";
 import { server } from "../helper";
 import axios from "axios";
-import { decrypt } from "../assets/js/encryption";
+import { decrypt, encrypt } from "../assets/js/encryption";
+import router from '../router'
 
 export default {
   data() {
@@ -40,6 +41,9 @@ export default {
       friendIdList: null,
       friendList: [],
       cacheIDList: null,
+      groupsList: null,
+      idLogged: null,
+      loggedimg: null,
     };
   },
   async created() {
@@ -48,27 +52,105 @@ export default {
     try {
       await axios
         .get(`${server.baseURL}/users/user/${login}`)
-        .then((data) => (this.friendIdList = data.data.friends));
+        .then(
+          (data) => (
+            (this.friendIdList = data.data.friends),
+            (this.groupsList = data.data.groups),
+            (this.idLogged = data.data._id),
+            (this.loggedimg = data.data.img)
+          )
+        );
     } catch (e) {
       console.log(e);
     }
-    this.getFriendsinfos()
+    this.getFriendsinfos();
   },
   methods: {
+    async messageTo(friendId, friendGroups) {
+      var isAlreadyGroup = await this.checkGroup(this.groupsList, friendId);
+      if (isAlreadyGroup == false) {
+        var createdGroup = await this.createGroup([this.idLogged, friendId]);
+        this.groupsList.push(createdGroup.data.messages._id);
+        friendGroups.push(createdGroup.data.messages._id);
+        this.updateGroups(this.idLogged, this.groupsList);
+        this.updateGroups(friendId, friendGroups);
+      }
+      else{
+        this.goToGroup(isAlreadyGroup)
+      }
+    },
+    async checkGroup(groups, friendId) {
+      for (let index = 0; index < groups.length; index++) {
+        const groupId = groups[index];
+        if (groupId != "") {
+          var groupAttendees;
+          try {
+            await axios
+              .get(`${server.baseURL}/messages/message/${groupId}`)
+              .then((data) => (groupAttendees = data.data.attendees));
+          } catch (e) {
+            console.log(e);
+          }
+          if (groupAttendees != undefined) {
+            if (groupAttendees.length == 2) {
+              if (
+                groupAttendees.indexOf(this.idLogged) != -1 &&
+                groupAttendees.indexOf(friendId) != -1
+              ) {
+                return groupId;
+              }
+            }
+          }
+        }
+      }
+      return false;
+    },
+    goToGroup(groupId){
+      groupId = encrypt(groupId)
+      router.push({ path: '/chat', query: { search: groupId } })
+    },
+    async updateGroups(id, group) {
+      try {
+        await axios.put(`${server.baseURL}/users/update?customerID=${id}`, {
+          groups: group,
+        });
+        console.log("reussis");
+        window.location = "/friends";
+        return;
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+    },
+    async createGroup(ids) {
+      var createdGroup;
+      try {
+        createdGroup = await axios.post(`${server.baseURL}/messages/create`, {
+          name: "PrivateMessage",
+          attendees: ids,
+          img: this.loggedimg,
+          messages: [],
+        });
+        return createdGroup;
+      } catch (e) {
+        console.log(e);
+      }
+    },
     async getFriendsinfos() {
       var friends = [];
       for (let index = 0; index < this.friendIdList.length; index++) {
         const friendId = this.friendIdList[index];
-        if(friendId != ""){
-        await axios
-          .get(`${server.baseURL}/users/user/${friendId}`)
-          .then((data) =>
-            friends.push({
-              id: data.data._id,
-              img: data.data.img,
-              username: data.data.pseudo,
-            })
-          );
+        if (friendId != "") {
+          await axios
+            .get(`${server.baseURL}/users/user/${friendId}`)
+            .then((data) =>
+              friends.push({
+                id: data.data._id,
+                img: data.data.img,
+                username: data.data.pseudo,
+                groups: data.data.groups,
+              })
+            );
         }
       }
       this.friendList = friends;

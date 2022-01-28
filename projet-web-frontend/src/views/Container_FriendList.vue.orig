@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; height: 100%; overflow:hidden">
+  <div style="display: flex; height: 100%; overflow: hidden">
     <div style="display: flex; width: 28%">
       <div style="background-color: #1f2225; height: 100%; width: 23%"></div>
       <div style="width: 77%; height: 100%; background-color: #2e3136">
@@ -144,15 +144,6 @@
                 </svg>
               </div>
             </h2>
-            <li
-              style="margin-top:10px;display: flex; flex-direction: column;align-items:center"
-              v-for="group in groups"
-              :key="group.id"
-            ><div class="groupWrapper">
-              <img class="groupAvatar" :src="group.img" />
-              <p style="font-weight:500;font-family: 'Helvetica Neue';font-size: 16px;line-height: 25px;white-space: nowrap;color: #8e9297;text-align: left;width: 100%;">{{ group.name }}</p>
-              </div>
-            </li>
           </div>
         </nav>
         <section>
@@ -250,7 +241,7 @@
         </button>
       </div>
       <div style="width: 100%; display: flex; height: 100%">
-        <component style="height: 48.4em" :is="activeComponent"></component>
+        <component :is="activeComponent"></component>
       </div>
     </div>
   </div>
@@ -270,7 +261,6 @@ export default {
     return {
       activeComponent: friendListComponent,
       userLogged: {},
-      groups: [],
     };
   },
   components: {
@@ -284,13 +274,14 @@ export default {
     try {
       await axios
         .get(`${server.baseURL}/users/user/${login}`)
-        .then((data) => ((this.userLogged = data.data), this.getGroupsInfos()));
+        .then((data) => (this.userLogged = data.data));
     } catch (e) {
       console.log(e);
     }
   },
   methods: {
     async copyUser() {
+<<<<<<< HEAD
       await navigator.clipboard.writeText(
         `${this.userLogged.pseudo}#${this.userLogged._id}`
       );
@@ -313,6 +304,10 @@ export default {
           console.log(e);
         }
       }
+=======
+      await navigator.clipboard.writeText(`${this.userLogged.pseudo}#${this.userLogged._id}`);
+      alert('Copied!');
+>>>>>>> 2c2bb7ef7087540efa3989574a7bfdf077938cf5
     },
     changeComponent(name) {
       if (name == "addFriend") {
@@ -334,27 +329,6 @@ export default {
 </script>
 
 <style scoped>
-.groupWrapper:hover{
-  background-color: #3a3d43;
-}
-.groupWrapper{
-  display:flex;
-  width:90%;
-  margin-bottom:3%;
-  padding-top:8px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.groupAvatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  vertical-align: middle;
-  border-style: none;
-  box-sizing: border-box;
-  margin-left: 6%;
-  margin-right: 9%;
-}
 .spanTous:hover {
   color: #fff;
 }
@@ -483,7 +457,7 @@ a:hover {
 .User {
   display: flex;
   background-color: #282b2f;
-  height: 50px;
+  height: 52px;
   font-size: 14px;
   font-weight: 500;
   align-items: center;
