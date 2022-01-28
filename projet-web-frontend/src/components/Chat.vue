@@ -46,11 +46,11 @@ export default {
   },
   async beforeMount() {
     let params = this.$route.query.search
+
     this.discussionId = decrypt(params)
     this.reloadMessage();
     this.loadMessage();
-    
-    
+
     let login = getCookie("token_login");
     login = decrypt(login);
     try {

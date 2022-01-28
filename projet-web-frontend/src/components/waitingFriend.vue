@@ -139,6 +139,8 @@ export default {
   methods: {
     async acceptedFriend(idFriend) {
       var friendFriends = await this.getFriend(idFriend); //on récupère les infos de la personne qui demande en ami qu'on met dans friendFriends
+      console.log(friendFriends);
+
       friendFriends.push(this.logedId); //on rajoute notre id dans le tableau d'ami de notre ami
       this.setFriend(idFriend, friendFriends); //on met à jour la bdd
 

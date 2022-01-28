@@ -148,7 +148,7 @@
               style="margin-top:10px;display: flex; flex-direction: column;align-items:center"
               v-for="group in groups"
               :key="group.id"
-            ><div class="groupWrapper">
+            ><div @click="goToGroup(group.id)" class="groupWrapper">
               <img class="groupAvatar" :src="group.img" />
               <p style="font-weight:500;font-family: 'Helvetica Neue';font-size: 16px;line-height: 25px;white-space: nowrap;color: #8e9297;text-align: left;width: 100%;">{{ group.name }}</p>
               </div>
@@ -263,7 +263,8 @@ import waitingFriend from "../components/waitingFriend.vue";
 import { getCookie } from "../assets/js/cookies";
 import { server } from "../helper";
 import axios from "axios";
-import { decrypt } from "../assets/js/encryption";
+import { decrypt, encrypt } from "../assets/js/encryption";
+import router from '../router'
 
 export default {
   data() {
@@ -290,6 +291,10 @@ export default {
     }
   },
   methods: {
+    goToGroup(groupId){
+      groupId = encrypt(groupId)
+      router.push({ path: '/chat', query: { search: groupId } })
+    },
     async copyUser() {
       await navigator.clipboard.writeText(
         `${this.userLogged.pseudo}#${this.userLogged._id}`
