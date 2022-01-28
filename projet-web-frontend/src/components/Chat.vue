@@ -1,9 +1,12 @@
 <template>
   <div>
+    <div style="display:flex;" class="retour">
+      <button @click="backToFriends()" style='margin-left:10px; margin-top:10px;background-color:rgba(255, 255, 255, 0.192);color:white;border:none;border-radius:5px' type="button">Retour</button>
+    </div>
     <div class="chat">
       <div class="intro">
         <div class="titleImg">
-          <img class="titleImg" :src="infos.img" />
+          <img class="titleImg" :src="infos.img" @click="goToGroup(infos._id)"/>
         </div>
         <div class="title">
           <h5 style="font-size: 1.4rem">{{ infos.name }}</h5>
@@ -56,8 +59,9 @@
 <script>
 import { server } from "../helper";
 import axios from "axios";
-import { decrypt } from "../assets/js/encryption";
+import { decrypt, encrypt } from "../assets/js/encryption";
 import { getCookie } from "../assets/js/cookies";
+import router from '../router'
 
 export default {
   name: "chat",
@@ -91,6 +95,9 @@ export default {
     );
   },
   methods: {
+    backToFriends(){
+      window.location = '/friends'
+    },
     async submit(input) {
       if (input.length > 0) {
         let newMessage = {
@@ -113,6 +120,10 @@ export default {
         }
         this.input = "";
       }
+    },
+    goToGroup(groupId){
+      groupId = encrypt(groupId)
+      router.push({ path: '/settingsMessages', query: { search: groupId } })
     },
     async loadMessage() {
       try {
