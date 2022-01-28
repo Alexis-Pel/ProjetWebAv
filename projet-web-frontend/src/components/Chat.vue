@@ -1,17 +1,29 @@
 <template>
   <div>
     <div class="chat">
-      <div class="titleImg">
-        <img class="titleImg" :src="infos.img" alt="imgConv" />
+      <div class="intro">
+        <div class="titleImg">
+          <img class="titleImg" :src="infos.img" />
+        </div>
+        <div class="title">
+          <h5 style="font-size: 1.4rem">{{ infos.name }}</h5>
+        </div>
+        <div class="welcome">
+          <h6 style="font-size: 13px">Bienvenue au début du groupe privé</h6>
+        </div>
       </div>
-      <div class="title">
-        <h5>{{ infos.name }}</h5>
-      </div>
-      <div class="welcome"><h6>Bienvenue au début du groupe privé</h6></div>
-      <div v-for="message in infos.messages" :key="message.id">
+      <div
+        style="
+          padding-top: 5px;
+          margin-top: 5px;
+          border-bottom: 1px solid #424549;
+        "
+        v-for="message in infos.messages"
+        :key="message.id"
+      >
         <div class="container">
           <div class="img">
-            <img class="img" :src="message.img" alt="imgProfil" />
+            <img class="img" :src="message.img" />
           </div>
           <div class="block-message">
             <div class="pseudo-date">
@@ -19,7 +31,9 @@
               <p class="date">{{ message.date }}</p>
             </div>
             <div class="content">
-              <p class="message">{{ message.message }}</p>
+              <p style="font-size: 13px; margin-bottom: 0" class="message">
+                {{ message.message }}
+              </p>
             </div>
           </div>
         </div>
@@ -31,10 +45,11 @@
           type="text"
           placeholder="Envoyer un message"
           v-model="input"
+          style="color: #fff; text-align: left"
         />
       </div>
     </div>
-    <div style="margin-top: 8%"></div>
+    <div id="end" style="margin-top: 8%"></div>
   </div>
 </template>
 
@@ -70,27 +85,33 @@ export default {
     } catch (e) {
       console.log(e);
     }
+    window.scrollTo(
+      0,
+      document.body.scrollHeight || document.documentElement.scrollHeight
+    );
   },
   methods: {
     async submit(input) {
-      let newMessage = {
-        pseudo: this.userLogged.pseudo,
-        id: this.infos.messages.length,
-        message: input,
-      };
-      this.infos.messages.push(newMessage);
-      try {
-        await axios.put(
-          `${server.baseURL}/messages/update?messagesID=${this.infos._id}`,
-          {
-            //on met à jour les demandes d'amis de la personne dans la bdd
-            messages: this.infos.messages,
-          }
-        );
-      } catch (error) {
-        console.log(error);
+      if (input.length > 0) {
+        let newMessage = {
+          pseudo: this.userLogged.pseudo,
+          id: this.infos.messages.length,
+          message: input,
+        };
+        this.infos.messages.push(newMessage);
+        try {
+          await axios.put(
+            `${server.baseURL}/messages/update?messagesID=${this.infos._id}`,
+            {
+              //on met à jour les demandes d'amis de la personne dans la bdd
+              messages: this.infos.messages,
+            }
+          );
+        } catch (error) {
+          console.log(error);
+        }
+        this.input = "";
       }
-      this.input = "";
     },
     async loadMessage() {
       try {
@@ -140,8 +161,18 @@ export default {
 p {
   margin-left: 10px;
 }
+.intro {
+  display: flex;
+  align-items: center;
+  padding-bottom: 2%;
+  margin-bottom: 3%;
+  margin-top: 1%;
+  border-bottom: 1px #424549 solid;
+  justify-content: center;
+}
 .pseudo {
   color: white;
+  font-weight: 600;
 }
 .date {
   color: gray;
@@ -160,7 +191,9 @@ div.img {
 .block-message {
   display: flex;
   flex-direction: column;
+  margin-bottom: 10px;
   width: 100%;
+  margin-left: 5px;
 }
 .container {
   display: flex;
@@ -193,6 +226,7 @@ div.img {
   padding: 0;
   margin: 0;
   margin-bottom: 10px;
+  padding-left: 3%;
   overflow: hidden;
 }
 </style>
