@@ -19,6 +19,15 @@
                 <svg width="40" height="32" viewBox="0 0 40 32"><foreignObject x="0" y="0" width="32" height="32"><div style="width: 100%;height: 100%;"><img :src="friend.img" aria-hidden="true"></div></foreignObject></svg>
                 <span style="margin-top:5px" class="username">{{ friend.username }}</span>
               </div>
+              <div class="divButNo">
+                    <button class="no" @click="deletedFriend(friend.id)">
+                      <img
+                        class="imgBut"
+                        src="@/assets/croix.png"
+                        alt="croix"
+                      />
+                    </button>
+                  </div>
             </div>
             </a>
           </li>
@@ -45,6 +54,9 @@ export default {
       idLogged: null,
       loggedimg: null,
       pseudo: "",
+      pendingInvites: [], //id dans pendingFriends
+      pendingInfos: [], //info des personnes qui demande en ami
+      logedId: null, //mon id
     };
   },
   async created() {
@@ -59,9 +71,21 @@ export default {
             (this.groupsList = data.data.groups),
             (this.idLogged = data.data._id),
             (this.loggedimg = data.data.img),
-            this.pseudo = data.data.pseudo
+            this.pseudo = data.data.pseudo,
+            (this.pendingInvites = data.data.pendingFriends), //récupération des id dans pendingFriends
+            (this.logedId = data.data._id) //récupération de mon id
           )
         );
+        for (let index = 0; index < this.pendingInvites.length; index++) {
+        const id = this.pendingInvites[index];
+        try {
+          await axios
+            .get(`${server.baseURL}/users/user/${id}`)
+            .then((data) => this.pendingInfos.push(data.data))//on récupère les infos des personnes qui demande en ami qu'on met dans pendingInfos
+        } catch (e) {
+          console.log(e);
+          }
+        }
     } catch (e) {
       console.log(e);
     }
@@ -157,6 +181,55 @@ export default {
         }
       }
       this.friendList = friends;
+    },
+
+
+    async deletedFriend(idFriend){
+      var friendFriends = await this.getFriend(idFriend); //on récupère les infos de la personne qui demande en ami qu'on met dans friendFriends
+      console.log(friendFriends);
+      var delIndex = friendFriends.indexOf(this.logedId); 
+      if (friendFriends.length == 1) {
+        friendFriends = [];
+      } else {
+        friendFriends = friendFriends.splice(delIndex - 1, 1);
+      }
+      this.setFriend(idFriend, friendFriends); //on met à jour la bdd
+
+    var myFriends = await this.getFriend(this.logedId); //on récupère les infos de la personne qui demande en ami qu'on met dans friendFriends
+      console.log(myFriends);
+      delIndex = myFriends.indexOf(idFriend); 
+      console.log(delIndex);
+
+      if (myFriends.length == 1) {
+        myFriends = [];
+      } else {
+        myFriends = myFriends.splice(delIndex - 1, 1);
+      }
+      this.setFriend(this.logedId, myFriends); //on met à jour la bdd
+
+
+    },
+
+    async setFriend(id, delFriends) { //on met à jour les amis de la personne dans la bdd 
+        try {
+          await axios.put(
+            `${server.baseURL}/users/update?customerID=${id}`, {
+            friends: delFriends, 
+          });
+        } catch (error) {
+          console.log(error);
+        }
+    },
+    async getFriend(id) { //on récupère les infos du tableau friends d'une personne gràce à son id de la bdd
+      var localFriend;
+      try {
+        await axios
+          .get(`${server.baseURL}/users/user/${id}`) 
+          .then((data) => localFriend = data.data.friends );
+      } catch (error) {
+        console.log(error);
+      }
+      return localFriend;
     },
   },
 };
@@ -266,4 +339,22 @@ img {
   min-width: 0;
   overflow: hidden;
 }
+
+
+.no {
+  margin: 0%;
+  padding: 0%;
+  background-color: #36393e00;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 30%;
+}
+.imgBut {
+  width: 80%;
+  
+  border-radius: 50%;
+}
+
+
 </style>
