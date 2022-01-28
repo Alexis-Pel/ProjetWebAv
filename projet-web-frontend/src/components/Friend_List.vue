@@ -33,6 +33,7 @@ import { getCookie } from "../assets/js/cookies";
 import { server } from "../helper";
 import axios from "axios";
 import { decrypt, encrypt } from "../assets/js/encryption";
+import router from '../router'
 
 export default {
   data() {
@@ -106,7 +107,7 @@ export default {
     },
     goToGroup(groupId){
       groupId = encrypt(groupId)
-      window.location = `/chat?=${groupId}`
+      router.push({ path: '/chat', query: { search: groupId } })
     },
     async updateGroups(id, group) {
       try {

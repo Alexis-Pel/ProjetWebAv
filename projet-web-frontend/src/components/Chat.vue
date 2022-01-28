@@ -30,6 +30,7 @@
 <script>
 import { server } from "../helper";
 import axios from "axios";
+import { decrypt } from "../assets/js/encryption";
 
 export default {
   name: "chat",
@@ -53,10 +54,9 @@ export default {
     };
   },
   async beforeMount() {
-    let params = new URLSearchParams(window.location.search)
-    console.log(params)
-    let id = params.get("id")
-    console.log(id)
+    let params = this.$route.query.search
+    let id = decrypt(params)
+
     try {
       await axios
         .get(`${server.baseURL}/messages/message/${id}`)
