@@ -12,7 +12,7 @@
     <h5>Tous les amis - {{ friendList.length }}</h5>
       <ul>
         <div>
-          <li @click="messageTo(friend.id, friend.groups)" v-for="friend in friendList" :key="friend.id">
+          <li @click="messageTo(friend.id, friend.groups, friend.username)" v-for="friend in friendList" :key="friend.id">
             <a style="display:flex; flex-direction:column;cursor:pointer">
             <div class="card">
               <div style="display:flex;margin: 0;padding: 0;border: 0;font-weight: inherit;font-style: inherit;font-family: inherit;font-size: 100%;vertical-align: baseline;">
@@ -44,6 +44,7 @@ export default {
       groupsList: null,
       idLogged: null,
       loggedimg: null,
+      pseudo: "",
     };
   },
   async created() {
@@ -57,7 +58,8 @@ export default {
             (this.friendIdList = data.data.friends),
             (this.groupsList = data.data.groups),
             (this.idLogged = data.data._id),
-            (this.loggedimg = data.data.img)
+            (this.loggedimg = data.data.img),
+            this.pseudo = data.data.pseudo
           )
         );
     } catch (e) {
@@ -66,10 +68,11 @@ export default {
     this.getFriendsinfos();
   },
   methods: {
-    async messageTo(friendId, friendGroups) {
+    async messageTo(friendId, friendGroups, friendUsername) {
       var isAlreadyGroup = await this.checkGroup(this.groupsList, friendId);
+
       if (isAlreadyGroup == false) {
-        var createdGroup = await this.createGroup([this.idLogged, friendId]);
+        var createdGroup = await this.createGroup([this.idLogged, friendId], friendUsername);
         this.groupsList.push(createdGroup.data.messages._id);
         friendGroups.push(createdGroup.data.messages._id);
         this.updateGroups(this.idLogged, this.groupsList);
@@ -122,11 +125,11 @@ export default {
         return;
       }
     },
-    async createGroup(ids) {
+    async createGroup(ids, friendUsername) {
       var createdGroup;
       try {
         createdGroup = await axios.post(`${server.baseURL}/messages/create`, {
-          name: "PrivateMessage",
+          name: `${this.pseudo} | ${friendUsername}`,
           attendees: ids,
           img: this.loggedimg,
           messages: [],
