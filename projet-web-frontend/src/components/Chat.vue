@@ -5,6 +5,7 @@
     </div>
     <div class="title">
       <h5>{{ infos.name }}</h5>
+      <h5>name</h5>
     </div>
     <div class="welcome"><h6>Bienvenue au début du groupe privé</h6></div>
     <div v-for="message in infos.messages" :key="message.id">
@@ -39,20 +40,16 @@ export default {
     return {
       infos: null,
       input: "",
-      userLogged: null
+      userLogged: null,
+      discussionId: ""
     };
   },
   async beforeMount() {
     let params = this.$route.query.search
-    let id = decrypt(params)
-
-    try {
-      await axios
-        .get(`${server.baseURL}/messages/message/${id}`)
-        .then((data) => (this.infos = data.data));
-    } catch (e) {
-      console.log(e);
-    }
+    this.discussionId = decrypt(params)
+    this.reloadMessage();
+    this.loadMessage();
+    
     
     let login = getCookie("token_login");
     login = decrypt(login);
@@ -80,6 +77,18 @@ export default {
           console.log(error);
         }
         this.input = "";
+    },
+    async loadMessage(){
+      try {
+      await axios
+        .get(`${server.baseURL}/messages/message/${this.discussionId}`)
+        .then((data) => (this.infos = data.data));
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    reloadMessage(){
+      setInterval(this.loadMessage, 999)
     }
   }
 
