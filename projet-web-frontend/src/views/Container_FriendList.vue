@@ -150,7 +150,7 @@
               :key="group.id"
             ><div class="groupWrapper">
               <img class="groupAvatar" :src="group.img" />
-              <p style="font-weight:500;font-family: 'Helvetica Neue';font-size: 18px;line-height: 25px;white-space: nowrap;color: #8e9297;text-align: left;width: 100%;">{{ group.name }}</p>
+              <p style="font-weight:500;font-family: 'Helvetica Neue';font-size: 16px;line-height: 25px;white-space: nowrap;color: #8e9297;text-align: left;width: 100%;">{{ group.name }}</p>
               </div>
             </li>
           </div>

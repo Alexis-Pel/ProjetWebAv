@@ -32,7 +32,7 @@
 import { getCookie } from "../assets/js/cookies";
 import { server } from "../helper";
 import axios from "axios";
-import { decrypt } from "../assets/js/encryption";
+import { decrypt, encrypt } from "../assets/js/encryption";
 
 export default {
   data() {
@@ -42,7 +42,7 @@ export default {
       cacheIDList: null,
       groupsList: null,
       idLogged: null,
-      loggedimg: null
+      loggedimg: null,
     };
   },
   async created() {
@@ -66,24 +66,58 @@ export default {
   },
   methods: {
     async messageTo(friendId, friendGroups) {
-      var createdGroup = await this.createGroup([this.idLogged, friendId]);
-
-      this.groupsList.push(createdGroup.data.messages._id);
-      friendGroups.push(createdGroup.data.messages._id);
-      this.updateGroups(this.idLogged, this.groupsList)
-      this.updateGroups(friendId, friendGroups)
+      var isAlreadyGroup = await this.checkGroup(this.groupsList, friendId);
+      if (isAlreadyGroup == false) {
+        var createdGroup = await this.createGroup([this.idLogged, friendId]);
+        this.groupsList.push(createdGroup.data.messages._id);
+        friendGroups.push(createdGroup.data.messages._id);
+        this.updateGroups(this.idLogged, this.groupsList);
+        this.updateGroups(friendId, friendGroups);
+      }
+      else{
+        this.goToGroup(isAlreadyGroup)
+      }
+    },
+    async checkGroup(groups, friendId) {
+      for (let index = 0; index < groups.length; index++) {
+        const groupId = groups[index];
+        if (groupId != "") {
+          var groupAttendees;
+          try {
+            await axios
+              .get(`${server.baseURL}/messages/message/${groupId}`)
+              .then((data) => (groupAttendees = data.data.attendees));
+          } catch (e) {
+            console.log(e);
+          }
+          if (groupAttendees != undefined) {
+            if (groupAttendees.length == 2) {
+              if (
+                groupAttendees.indexOf(this.idLogged) != -1 &&
+                groupAttendees.indexOf(friendId) != -1
+              ) {
+                return groupId;
+              }
+            }
+          }
+        }
+      }
+      return false;
+    },
+    goToGroup(groupId){
+      groupId = encrypt(groupId)
+      window.location = `/chat?=${groupId}`
     },
     async updateGroups(id, group) {
       try {
-        await axios.put(
-          `${server.baseURL}/users/update?customerID=${id}`,
-          { groups: group }
-        );
-        console.log('reussis')
-        window.location = ('/friends')
+        await axios.put(`${server.baseURL}/users/update?customerID=${id}`, {
+          groups: group,
+        });
+        console.log("reussis");
+        window.location = "/friends";
         return;
       } catch (error) {
-        console.log(error)
+        console.log(error);
         return;
       }
     },
