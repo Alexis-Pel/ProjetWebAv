@@ -12,12 +12,14 @@
     <h5>Tous les amis - {{ friendList.length }}</h5>
       <ul>
         <div>
-          <li @click="messageTo(friend.id, friend.groups, friend.username)" v-for="friend in friendList" :key="friend.id">
-            <a style="display:flex; flex-direction:column;cursor:pointer">
+          <li  v-for="friend in friendList" :key="friend.id">
+            <a style="display:flex; flex-direction:column;">
             <div class="card">
-              <div style="display:flex;margin: 0;padding: 0;border: 0;font-weight: inherit;font-style: inherit;font-family: inherit;font-size: 100%;vertical-align: baseline;">
-                <svg width="40" height="32" viewBox="0 0 40 32"><foreignObject x="0" y="0" width="32" height="32"><div style="width: 100%;height: 100%;"><img :src="friend.img" aria-hidden="true"></div></foreignObject></svg>
-                <span style="margin-top:5px" class="username">{{ friend.username }}</span>
+              <div @click="messageTo(friend.id, friend.groups, friend.username)" class="messageButton">
+                <div style="display:flex;margin: 0;padding: 0;border: 0;font-weight: inherit;font-style: inherit;font-family: inherit;font-size: 100%;vertical-align: baseline;">
+                  <svg width="40" height="32" viewBox="0 0 40 32"><foreignObject x="0" y="0" width="32" height="32"><div style="width: 100%;height: 100%;"><img :src="friend.img" aria-hidden="true"></div></foreignObject></svg>
+                  <span style="margin-top:5px" class="username">{{ friend.username }}</span>
+                </div>
               </div>
               <div class="divButNo">
                     <button class="no" @click="deletedFriend(friend.id)">
@@ -196,9 +198,7 @@ export default {
       this.setFriend(idFriend, friendFriends); //on met à jour la bdd
 
     var myFriends = await this.getFriend(this.logedId); //on récupère les infos de la personne qui demande en ami qu'on met dans friendFriends
-      console.log(myFriends);
       delIndex = myFriends.indexOf(idFriend); 
-      console.log(delIndex);
 
       if (myFriends.length == 1) {
         myFriends = [];
@@ -207,6 +207,12 @@ export default {
       }
       this.setFriend(this.logedId, myFriends); //on met à jour la bdd
 
+      var index = this.friendList.indexOf(idFriend); //on mes à jour nos tableaus en local
+      if (this.friendList.length == 1) {
+        this.friendList = [];
+      } else {
+        this.friendList = this.friendList.splice(index - 1, 1);
+      }
 
     },
 
@@ -274,6 +280,10 @@ ul {
   max-width: 100%;
   vertical-align: baseline;
   align-items: center;
+}
+.messageButton{
+  width: 100%;
+  cursor:pointer
 }
 .username {
   white-space: nowrap;

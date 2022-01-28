@@ -265,7 +265,6 @@ import { server } from "../helper";
 import axios from "axios";
 import { decrypt, encrypt } from "../assets/js/encryption";
 import router from '../router'
-
 export default {
   data() {
     return {
