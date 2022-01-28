@@ -1,13 +1,13 @@
 <template>
   <div class="chat">
     <div class="titleImg">
-      <img class="titleImg" :src="title.img" alt="imgConv" />
+      <img class="titleImg" :src="infos.img" alt="imgConv" />
     </div>
     <div class="title">
-      <h5>{{ info }}</h5>
+      <h5>{{ infos.name }}</h5>
     </div>
     <div class="welcome"><h6>Bienvenue au début du groupe privé</h6></div>
-    <div v-for="message in messages" :key="message.id">
+    <div v-for="message in infos.messages" :key="message.id">
       <div class="container">
         <div class="img">
           <img class="img" :src="message.img" alt="imgProfil" />
@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <div class="divInput"><input class="input" type="text" :placeholder="title.input" /></div>
+    <div class="divInput"><input class="input" v-on:keyup.enter="submit(input)" type="text" placeholder="Envoyer un message" v-model="input"></div>
   </div>
 </template>
 
@@ -31,26 +31,15 @@
 import { server } from "../helper";
 import axios from "axios";
 import { decrypt } from "../assets/js/encryption";
+import { getCookie } from "../assets/js/cookies";
 
 export default {
   name: "chat",
   data() {
     return {
-      info: null,
-      messages: [
-        {
-          img: "https://resize-elle.ladmedia.fr/rcrop/796,1024/img/var/plain_site/storage/images/people/la-vie-des-people/news/le-beau-gosse-de-la-semaine-du-13-11-09-est-robert-pattinson/12736805-1-fre-FR/Le-beau-gosse-de-la-semaine-du-13-11-09-est-Robert-Pattinson.jpg",
-          pseudo: "piou",
-          date: "15/12/2002",
-          message: "coucou cva",
-          id: 0,
-        },
-      ],
-      title: {
-        tableName: "voiture",
-        img: "https://www.livepeople.fr/wp-content/uploads/2021/09/voitures-les-plus-laides-de-lhistoire-.jpg",
-        input: "Envoyer un message dans le voiture",
-      },
+      infos: null,
+      input: "",
+      userLogged: null
     };
   },
   async beforeMount() {
@@ -60,12 +49,39 @@ export default {
     try {
       await axios
         .get(`${server.baseURL}/messages/message/${id}`)
-        .then((data) => (this.info = data.data));
-        console.log(this.info)
+        .then((data) => (this.infos = data.data));
+    } catch (e) {
+      console.log(e);
+    }
+    
+    let login = getCookie("token_login");
+    login = decrypt(login);
+    try {
+      await axios
+        .get(`${server.baseURL}/users/user/${login}`)
+        .then((data) => (this.userLogged = data.data));
     } catch (e) {
       console.log(e);
     }
   },
+  methods:{
+    async submit(input){
+      
+      let newMessage = {
+        pseudo:this.userLogged.pseudo,id:this.infos.messages.length,message:input,
+      };
+      this.infos.messages.push(newMessage)
+       try {
+          await axios.put(
+            `${server.baseURL}/messages/update?messagesID=${this.infos._id}`, { //on met à jour les demandes d'amis de la personne dans la bdd 
+            messages: this.infos.messages, 
+          });
+        } catch (error) {
+          console.log(error);
+        }
+        this.input = "";
+    }
+  }
 
 };
 </script>
@@ -90,7 +106,7 @@ export default {
 }
 .chat {
   display: flex;
-  height: 50em;
+  height: 122.5%;
   background-color: rgb(54, 57, 63);
   justify-content: flex-start;
   flex-direction: column;
@@ -158,5 +174,10 @@ div.img {
   overflow: hidden;
   
 }
-
+</style>
+<style>
+html,
+body{
+  background-color: rgb(54, 57, 63);
+}
 </style>
