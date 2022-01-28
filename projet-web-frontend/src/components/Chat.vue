@@ -56,7 +56,6 @@ export default {
   async beforeMount() {
     let params = this.$route.query.search
     let id = decrypt(params)
-
     try {
       await axios
         .get(`${server.baseURL}/messages/message/${id}`)
